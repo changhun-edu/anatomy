@@ -178,6 +178,59 @@
   .exam-summary .big-score{font-family:'Fraunces',serif; font-size:48px; color:var(--nerve); margin-bottom:8px;}
   .exam-breakdown{text-align:left; margin-top:20px; font-size:13px; color:var(--text-mid); line-height:1.8;}
 
+  /* ---------- Game mode selector ---------- */
+  .game-mode-select{display:flex; gap:10px; margin-bottom:24px; flex-wrap:wrap;}
+  .game-mode-pill{
+    background:var(--ink-card); border:1px solid var(--line); color:var(--text-mid);
+    padding:10px 20px; border-radius:24px; font-size:14px; cursor:pointer;
+    font-family:'Inter',sans-serif; font-weight:500; transition:.15s;
+  }
+  .game-mode-pill:hover{border-color:var(--nerve-dim); color:var(--paper);}
+  .game-mode-pill.active{background:var(--nerve); color:var(--ink); border-color:var(--nerve);}
+
+  /* ---------- Term Sprint ---------- */
+  .sprint-hud{display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:22px;}
+  .sprint-hud-item{background:var(--ink-card); border:1px solid var(--line); border-radius:6px; padding:14px 16px; text-align:center;}
+  .sprint-hud-item .shi-num{font-family:'Fraunces',serif; font-size:28px; font-weight:600; line-height:1;}
+  .sprint-hud-item .shi-label{font-size:10px; color:var(--text-dim); text-transform:uppercase; letter-spacing:.06em; margin-top:4px;}
+  .sprint-timer-num{color:var(--nerve);}
+  .sprint-timer-num.urgent{color:var(--artery); animation:timerPulse .5s ease infinite alternate;}
+  @keyframes timerPulse{from{opacity:1;} to{opacity:.4;}}
+  .sprint-score-num{color:var(--nerve);}
+  .sprint-streak-num{color:#7ECAD4;}
+  .sprint-best-num{color:var(--text-mid);}
+  .sprint-card{background:var(--ink-card); border:1px solid var(--line); border-radius:8px; padding:28px;}
+  .sprint-level{font-family:'IBM Plex Mono',monospace; font-size:10.5px; color:var(--text-dim); text-transform:uppercase; letter-spacing:.08em; margin-bottom:10px;}
+  .sprint-def{font-size:16px; line-height:1.7; margin-bottom:20px; min-height:56px;}
+  .sprint-def b{color:var(--nerve);}
+  .sprint-input-row{display:flex; gap:10px;}
+  .sprint-input{
+    flex:1; background:var(--ink-soft); border:2px solid var(--line); color:var(--paper);
+    padding:12px 16px; border-radius:6px; font-size:16px; font-family:'Inter',sans-serif;
+    transition:border-color .15s; outline:none;
+  }
+  .sprint-input:focus{border-color:var(--nerve);}
+  .sprint-input.correct{border-color:var(--nerve); animation:flashGreen .35s ease;}
+  .sprint-input.wrong{border-color:var(--artery); animation:flashRed .35s ease;}
+  @keyframes flashGreen{0%,100%{background:var(--ink-soft);} 50%{background:rgba(232,197,71,.1);}}
+  @keyframes flashRed{0%,100%{background:var(--ink-soft);} 50%{background:rgba(193,68,60,.12);}}
+  .sprint-hint{font-size:12px; color:var(--text-dim); margin-top:10px; min-height:16px;}
+  .sprint-answer-log{margin-top:18px; display:flex; flex-direction:column; gap:6px; max-height:180px; overflow-y:auto;}
+  .sprint-log-item{font-size:13px; padding:5px 10px; border-radius:4px; display:flex; justify-content:space-between; gap:8px;}
+  .sprint-log-item.ok{background:rgba(232,197,71,.08); color:var(--nerve);}
+  .sprint-log-item.miss{background:rgba(193,68,60,.08); color:var(--artery);}
+  .sprint-start-card{background:var(--ink-card); border:1px solid var(--line); border-radius:8px; padding:32px; text-align:center;}
+  .sprint-start-card p{color:var(--text-mid); font-size:14px; line-height:1.7; margin-bottom:20px; max-width:460px; margin-left:auto; margin-right:auto;}
+  .sprint-result{background:var(--ink-card); border:1px solid var(--line); border-radius:8px; padding:32px; text-align:center;}
+  .sprint-result .big{font-family:'Fraunces',serif; font-size:56px; color:var(--nerve); line-height:1;}
+  .sprint-result .big-label{color:var(--text-dim); font-size:13px; margin-top:4px; margin-bottom:24px;}
+  .sprint-result-grid{display:flex; gap:16px; justify-content:center; flex-wrap:wrap; margin-bottom:24px;}
+  .sprint-result-cell{background:var(--ink-soft); border:1px solid var(--line); border-radius:6px; padding:14px 22px; text-align:center;}
+  .sprint-result-cell .rc-num{font-family:'Fraunces',serif; font-size:24px; color:var(--paper);}
+  .sprint-result-cell .rc-label{font-size:11px; color:var(--text-dim); margin-top:2px;}
+  .sprint-miss-list{text-align:left; margin-top:20px; font-size:13px; color:var(--text-mid); line-height:1.8;}
+  .sprint-miss-list b{color:var(--paper);}
+
   /* ---------- Root Builder game ---------- */
   .game-hud{display:flex; gap:24px; margin-bottom:18px; flex-wrap:wrap;}
   .game-hud-item{background:var(--ink-card); border:1px solid var(--line); border-radius:6px; padding:12px 18px; text-align:center;}
@@ -278,7 +331,13 @@
     .game-card{padding:18px;}
     .game-hud{gap:12px;}
     .game-hud-item{padding:10px 14px;}
-    .tile{padding:9px 12px; font-size:13px;}    .case-title{font-size:15px;}
+    .tile{padding:9px 12px; font-size:13px;}
+    .sprint-hud{grid-template-columns:repeat(2,1fr); gap:10px;}
+    .sprint-card{padding:18px;}
+    .sprint-def{font-size:14px;}
+    .sprint-input{font-size:14px; padding:10px 12px;}
+    .sprint-result .big{font-size:40px;}
+    .case-title{font-size:15px;}
     .case-vignette{font-size:13px;}
 
     footer{padding:20px 18px; font-size:11px;}
@@ -308,7 +367,7 @@
   <div class="nav-row">
     <button class="active" data-view="overview">개요</button>
     <button data-view="terms">용어 암기</button>
-    <button data-view="game">🧩 어근 빌더</button>
+    <button data-view="game">🎮 암기 게임</button>
     <button data-view="structure">구조 시각화</button>
     <button data-view="clinical">임상 시나리오</button>
     <button data-view="exam">종합 테스트</button>
@@ -333,8 +392,8 @@
         <div class="ob-step" onclick="switchView('game',true)">
           <div class="ob-num">2</div>
           <div class="ob-body">
-            <div class="ob-label">🧩 어근 빌더 게임 — 어원 굳히기</div>
-            <div class="ob-desc">방금 외운 용어를 어근 조각으로 조립해보면서 철자와 의미를 동시에 잡습니다.</div>
+            <div class="ob-label">🎮 암기 게임 — 어원 굳히기 & 속도 훈련</div>
+            <div class="ob-desc">어근 빌더로 철자·의미를 익히고, 타이핑 스피드런으로 60초 안에 최대한 많이 맞히세요.</div>
           </div>
         </div>
         <div class="ob-step" onclick="switchView('structure',true)">
@@ -443,9 +502,19 @@
   </section>
 
   <section class="view" id="view-game">
-    <h2 class="section-title">🧩 어근 빌더</h2>
-    <p class="section-desc">조각을 순서대로 클릭해서 실제 용어를 조립하세요. 정답 개수가 늘어날수록 헷갈리는 조각(오답 타일)이 많아집니다.</p>
-    <div id="game-container"></div>
+    <h2 class="section-title">암기 게임</h2>
+    <div class="game-mode-select">
+      <button class="game-mode-pill active" data-gmode="builder" onclick="switchGameMode('builder')">🧩 어근 빌더</button>
+      <button class="game-mode-pill" data-gmode="sprint" onclick="switchGameMode('sprint')">⌨️ 타이핑 스피드런</button>
+    </div>
+    <div id="game-builder-wrap">
+      <p class="section-desc" style="margin-bottom:16px;">조각을 순서대로 클릭해서 실제 용어를 조립하세요. 정답 개수가 늘어날수록 헷갈리는 조각(오답 타일)이 많아집니다.</p>
+      <div id="game-container"></div>
+    </div>
+    <div id="game-sprint-wrap" style="display:none;">
+      <p class="section-desc" style="margin-bottom:16px;">60초 안에 설명을 읽고 용어를 최대한 많이 타이핑해 맞히세요. 오탈자는 어느 정도 허용됩니다.</p>
+      <div id="sprint-container"></div>
+    </div>
   </section>
 
   <section class="view" id="view-structure">
@@ -837,7 +906,7 @@ function loadState(){
     const raw = localStorage.getItem(STORAGE_KEY);
     if(raw) s = JSON.parse(raw);
   }catch(e){}
-  const defaults = { currentSystem:'brachial', currentView:'overview', srs:{}, custom:{}, gameHighScore:{} };
+  const defaults = { currentSystem:'brachial', currentView:'overview', srs:{}, custom:{}, gameHighScore:{}, sprintHighScore:{} };
   return Object.assign({}, defaults, s || {});
 }
 function saveState(){
@@ -863,25 +932,35 @@ function onSystemChange(){
   cardQueue = null; cardPos = 0;
   examState = null;
   gameState = null;
+  sprintState = null;
+  clearSprintTimer();
   renderOverview();
   refreshFlashcard();
   newQuiz();
   buildColumns();
   buildCases();
   if(state.currentView === 'exam') renderExamIntro();
-  if(state.currentView === 'game') startGame();
+  if(state.currentView === 'game'){
+    if(currentGameMode === 'builder') startGame();
+    else { sprintState = null; renderSprintIntro(); }
+  }
 }
 
 /* ================= NAV / HISTORY ================= */
 const VALID_VIEWS = ['overview','terms','structure','clinical','exam','game'];
 
 function applyView(view){
+  // Stop sprint timer when leaving the game tab
+  if(state.currentView === 'game' && view !== 'game'){ clearSprintTimer(); }
   document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active', b.dataset.view===view));
   document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active', v.id === 'view-'+view));
   state.currentView = view; saveState();
   if(view === 'structure'){ setTimeout(drawConnectors, 30); }
   if(view === 'exam' && !examState){ renderExamIntro(); }
-  if(view === 'game' && !gameState){ startGame(); }
+  if(view === 'game'){
+    if(currentGameMode === 'builder' && !gameState){ startGame(); }
+    if(currentGameMode === 'sprint' && !sprintState){ renderSprintIntro(); }
+  }
   window.scrollTo(0, 0);
 }
 function switchView(view, pushHistory){
@@ -1526,6 +1605,244 @@ function finishExam(){
 // gameState = null (not started) or:
 // { combo, best, distractorPool(all frags for this system), current:{term, parts, pool[{frag,used}], build[]} }
 let gameState = null;
+let currentGameMode = 'builder'; // 'builder' | 'sprint'
+
+function switchGameMode(mode){
+  currentGameMode = mode;
+  document.querySelectorAll('.game-mode-pill').forEach(p=>p.classList.toggle('active', p.dataset.gmode===mode));
+  document.getElementById('game-builder-wrap').style.display = mode==='builder' ? 'block' : 'none';
+  document.getElementById('game-sprint-wrap').style.display = mode==='sprint'  ? 'block' : 'none';
+  if(mode === 'builder'){ gameState = null; startGame(); }
+  if(mode === 'sprint')  { sprintState = null; renderSprintIntro(); }
+}
+
+/* ================= TERM SPRINT ================= */
+const SPRINT_DURATION = 60; // seconds
+let sprintState = null; // null | {queue, idx, score, streak, bestStreak, timer, log, missed}
+let sprintTimerId = null;
+
+function getSprintTerms(){
+  let terms = getTerms(state.currentSystem);
+  if(termFilter !== 'all') terms = terms.filter(t=>t.tag===termFilter);
+  return terms.length >= 2 ? terms : getTerms(state.currentSystem);
+}
+
+function renderSprintIntro(){
+  clearSprintTimer();
+  sprintState = null;
+  const box = document.getElementById('sprint-container');
+  const sysLabel = SYSTEMS[state.currentSystem].label;
+  const best = (state.sprintHighScore && state.sprintHighScore[state.currentSystem]) || 0;
+  const filterNote = termFilter !== 'all' ? ` (현재 필터: <b>${termFilter}</b>)` : '';
+  box.innerHTML = `
+    <div class="sprint-start-card">
+      <p><b>${sysLabel}</b> 계통${filterNote}<br>
+      정의가 하나씩 뜨면 용어를 타이핑하세요.<br>
+      <b>60초</b> 안에 최대한 많이 맞히고 콤보를 쌓으세요.<br>
+      오탈자는 어느 정도 허용됩니다 (레벤슈타인 거리 기반).<br><br>
+      최고 기록: <b style="color:var(--nerve)">${best}개</b></p>
+      <button class="btn primary" onclick="startSprint()" style="min-width:140px;">▶ 시작</button>
+    </div>`;
+}
+
+function startSprint(){
+  const terms = getSprintTerms();
+  const shuffled = terms.slice().sort(()=>Math.random()-0.5);
+  sprintState = {
+    queue: shuffled, idx: 0,
+    score: 0, streak: 0, bestStreak: 0,
+    timeLeft: SPRINT_DURATION,
+    log: [], missed: []
+  };
+  renderSprintGame();
+  sprintTimerId = setInterval(()=>{
+    if(!sprintState) return;
+    sprintState.timeLeft--;
+    updateSprintHUD();
+    if(sprintState.timeLeft <= 0){ clearSprintTimer(); endSprint(); }
+  }, 1000);
+}
+
+function clearSprintTimer(){
+  if(sprintTimerId){ clearInterval(sprintTimerId); sprintTimerId = null; }
+}
+
+function currentSprintTerm(){
+  if(!sprintState) return null;
+  return sprintState.queue[sprintState.idx % sprintState.queue.length];
+}
+
+function renderSprintGame(){
+  const box = document.getElementById('sprint-container');
+  const t = currentSprintTerm();
+  box.innerHTML = `
+    <div class="sprint-hud">
+      <div class="sprint-hud-item">
+        <div class="shi-num sprint-timer-num" id="sp-timer">${sprintState.timeLeft}</div>
+        <div class="shi-label">남은 시간</div>
+      </div>
+      <div class="sprint-hud-item">
+        <div class="shi-num sprint-score-num" id="sp-score">${sprintState.score}</div>
+        <div class="shi-label">정답</div>
+      </div>
+      <div class="sprint-hud-item">
+        <div class="shi-num sprint-streak-num" id="sp-streak">${sprintState.streak} 🔥</div>
+        <div class="shi-label">연속 정답</div>
+      </div>
+      <div class="sprint-hud-item">
+        <div class="shi-num sprint-best-num" id="sp-best">${(state.sprintHighScore && state.sprintHighScore[state.currentSystem]) || 0}</div>
+        <div class="shi-label">최고 기록</div>
+      </div>
+    </div>
+    <div class="sprint-card">
+      <div class="sprint-level" id="sp-level"></div>
+      <div class="sprint-def" id="sp-def"></div>
+      <div class="sprint-input-row">
+        <input type="text" class="sprint-input" id="sp-input"
+          placeholder="용어를 입력하세요..."
+          autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+      </div>
+      <div class="sprint-hint" id="sp-hint"></div>
+      <div class="sprint-answer-log" id="sp-log"></div>
+    </div>`;
+
+  updateSprintCard();
+  const inp = document.getElementById('sp-input');
+  inp.addEventListener('input', onSprintInput);
+  inp.addEventListener('keydown', e=>{ if(e.key==='Enter') trySprintSubmit(true); });
+  inp.focus();
+}
+
+function updateSprintHUD(){
+  if(!sprintState) return;
+  const timerEl = document.getElementById('sp-timer');
+  if(timerEl){
+    timerEl.textContent = sprintState.timeLeft;
+    timerEl.classList.toggle('urgent', sprintState.timeLeft <= 10);
+  }
+  const scoreEl = document.getElementById('sp-score');
+  if(scoreEl) scoreEl.textContent = sprintState.score;
+  const streakEl = document.getElementById('sp-streak');
+  if(streakEl) streakEl.textContent = sprintState.streak + ' 🔥';
+}
+
+function updateSprintCard(){
+  if(!sprintState) return;
+  const t = currentSprintTerm();
+  if(!t) return;
+  const lvlEl = document.getElementById('sp-level');
+  const defEl = document.getElementById('sp-def');
+  if(lvlEl) lvlEl.innerHTML = `<span class="tag-badge ${t.tag}">${t.tag}</span> &nbsp; 문제 ${sprintState.score + 1}`;
+  if(defEl) defEl.innerHTML = t.def.replace(/(신경|동맥|정맥|근육|뼈|부위)/g,'<b>$1</b>');
+  const inp = document.getElementById('sp-input');
+  if(inp){ inp.value = ''; inp.classList.remove('correct','wrong'); }
+  document.getElementById('sp-hint').textContent = '';
+}
+
+function onSprintInput(){
+  if(!sprintState) return;
+  const t = currentSprintTerm();
+  if(!t) return;
+  const inp = document.getElementById('sp-input');
+  const val = inp.value;
+  // Auto-submit if user's typed length closely matches and is correct
+  if(val.length >= Math.max(3, t.term.length - 2) && fuzzyMatches(val, t.term)){
+    trySprintSubmit(false);
+  }
+}
+
+function trySprintSubmit(isEnterKey){
+  if(!sprintState) return;
+  const t = currentSprintTerm();
+  if(!t) return;
+  const inp = document.getElementById('sp-input');
+  const val = (inp.value || '').trim();
+  if(!val) return;
+
+  const correct = fuzzyMatches(val, t.term);
+
+  if(correct){
+    sprintState.score++;
+    sprintState.streak++;
+    if(sprintState.streak > sprintState.bestStreak) sprintState.bestStreak = sprintState.streak;
+    inp.classList.add('correct');
+    appendSprintLog(true, val, t.term);
+    document.getElementById('sp-hint').textContent = `✓ 정답! → ${t.term}`;
+    if(sprintState.score > ((state.sprintHighScore && state.sprintHighScore[state.currentSystem]) || 0)){
+      if(!state.sprintHighScore) state.sprintHighScore = {};
+      state.sprintHighScore[state.currentSystem] = sprintState.score;
+      saveState();
+      document.getElementById('sp-best').textContent = sprintState.score;
+    }
+    sprintState.idx++;
+    // Avoid giving the same term twice in a row on the wrap-around
+    if(sprintState.idx % sprintState.queue.length === 0){
+      sprintState.queue.sort(()=>Math.random()-0.5);
+    }
+    setTimeout(()=>{ if(sprintState) updateSprintCard(); }, 250);
+  } else {
+    if(isEnterKey){
+      // Only penalise on explicit Enter press (not on auto-submit attempt)
+      sprintState.streak = 0;
+      inp.classList.add('wrong');
+      const hint = `✗ 오답. 정답: ${t.term}`;
+      document.getElementById('sp-hint').textContent = hint;
+      appendSprintLog(false, val, t.term);
+      sprintState.missed.push(t.term);
+      sprintState.idx++;
+      if(sprintState.idx % sprintState.queue.length === 0) sprintState.queue.sort(()=>Math.random()-0.5);
+      setTimeout(()=>{ if(sprintState) updateSprintCard(); }, 500);
+    }
+  }
+  updateSprintHUD();
+}
+
+function appendSprintLog(ok, typed, correct){
+  const log = document.getElementById('sp-log');
+  if(!log) return;
+  const item = document.createElement('div');
+  item.className = 'sprint-log-item ' + (ok ? 'ok' : 'miss');
+  item.innerHTML = ok
+    ? `<span>✓ ${correct}</span><span style="opacity:.5">${typed !== correct ? typed : ''}</span>`
+    : `<span>✗ ${correct}</span><span style="opacity:.5">입력: ${typed}</span>`;
+  log.prepend(item);
+  // Keep max 8 entries visible
+  while(log.children.length > 8) log.removeChild(log.lastChild);
+}
+
+function endSprint(){
+  if(!sprintState) return;
+  clearSprintTimer();
+  const { score, bestStreak, missed, queue } = sprintState;
+  const total = sprintState.idx;
+  const pct = total > 0 ? Math.round(score/total*100) : 0;
+  const missedUniq = [...new Set(missed)].slice(0, 12);
+  const missedHtml = missedUniq.length
+    ? `<div class="sprint-miss-list"><b>틀렸던 용어</b><br>${missedUniq.join(' · ')}</div>` : '';
+  const best = (state.sprintHighScore && state.sprintHighScore[state.currentSystem]) || 0;
+  const newRecord = score >= best && score > 0 ? '<div style="color:var(--nerve);font-size:13px;margin-top:4px;">🎉 새 최고 기록!</div>' : '';
+
+  document.getElementById('sprint-container').innerHTML = `
+    <div class="sprint-result">
+      <div class="big">${score}</div>
+      <div class="big-label">정답 수 / 60초</div>
+      ${newRecord}
+      <div class="sprint-result-grid">
+        <div class="sprint-result-cell"><div class="rc-num">${total}</div><div class="rc-label">시도</div></div>
+        <div class="sprint-result-cell"><div class="rc-num">${pct}%</div><div class="rc-label">정확도</div></div>
+        <div class="sprint-result-cell"><div class="rc-num">${bestStreak} 🔥</div><div class="rc-label">최고 콤보</div></div>
+        <div class="sprint-result-cell"><div class="rc-num">${best}</div><div class="rc-label">역대 최고</div></div>
+      </div>
+      ${missedHtml}
+      <div style="display:flex;gap:10px;justify-content:center;margin-top:22px;flex-wrap:wrap;">
+        <button class="btn primary" onclick="startSprint()">다시 도전</button>
+        <button class="btn" onclick="renderSprintIntro()">처음으로</button>
+      </div>
+    </div>`;
+  sprintState = null;
+}
+
+
 
 function getGameableTerms(sysKey){
   const sys = SYSTEMS[sysKey];
