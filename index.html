@@ -21,7 +21,11 @@
   .mono{font-family:'IBM Plex Mono',monospace;}
   button, .node, .sys-pill, .case-head, .quiz-opt{ -webkit-tap-highlight-color:transparent; touch-action:manipulation; }
 
-  header{border-bottom:1px solid var(--line); padding:24px 40px 16px; display:flex; align-items:flex-start; justify-content:space-between; flex-wrap:wrap; gap:14px;}
+  header{border-bottom:1px solid var(--line); padding:0 40px;}
+  .header-row{
+    max-width:1180px; margin:0 auto; padding:24px 0 16px;
+    display:flex; align-items:flex-start; justify-content:space-between; flex-wrap:wrap; gap:14px;
+  }
   header .eyebrow{font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--nerve); margin-bottom:6px; display:block;}
   header h1{font-family:'Fraunces',serif; font-weight:600; font-size:26px; letter-spacing:-0.01em; transition:color .15s;}
   header .sub{color:var(--text-dim); font-size:13px; margin-top:4px;}
@@ -39,7 +43,8 @@
   .sys-pill:hover{border-color:var(--nerve-dim);}
   .sys-pill.active{background:var(--nerve); color:var(--ink); border-color:var(--nerve);}
 
-  nav{display:flex; gap:2px; padding:0 40px; border-bottom:1px solid var(--line); background:var(--ink-soft); overflow-x:auto;}
+  nav{border-bottom:1px solid var(--line); background:var(--ink-soft); overflow-x:auto;}
+  .nav-row{max-width:1180px; margin:0 auto; padding:0 40px; display:flex; gap:2px;}
   nav button{background:none; border:none; color:var(--text-dim); font-family:'Inter',sans-serif; font-size:14px; font-weight:500; padding:14px 16px; min-height:46px; cursor:pointer; border-bottom:2px solid transparent; white-space:nowrap; transition:color .15s;}
   nav button:hover{color:var(--paper);}
   nav button.active{color:var(--nerve); border-bottom-color:var(--nerve);}
@@ -136,6 +141,11 @@
   .case-toggle{color:var(--text-dim); font-size:12px; font-family:'IBM Plex Mono',monospace;}
   .case-answer{display:none; margin-top:14px; padding-top:14px; border-top:1px dashed var(--line); font-size:13.5px; line-height:1.7; color:var(--paper);}
   .case-answer .a-k{color:var(--nerve); font-size:11px; text-transform:uppercase; letter-spacing:.08em; display:block; margin-bottom:4px; margin-top:10px;}
+  .custom-label{
+    display:inline-flex; align-items:center; font-size:10.5px; font-family:'IBM Plex Mono',monospace;
+    padding:3px 8px; border-radius:20px; margin-left:8px; white-space:nowrap; vertical-align:middle;
+    background:rgba(62,110,142,.15); color:var(--vein); border:1px solid rgba(62,110,142,.3);
+  }
   .case-card.open .case-answer{display:block;}
   .exam-intro{background:var(--ink-card); border:1px solid var(--line); border-radius:8px; padding:28px; text-align:center;}
   .exam-intro p{color:var(--text-mid); font-size:14px; margin-bottom:18px; line-height:1.6;}
@@ -204,37 +214,17 @@
 
   footer{padding:24px 40px; color:var(--text-dim); font-size:12px; border-top:1px solid var(--line); text-align:center;}
 
-  /* ---------- Disclaimer / verification ---------- */
-  .disclaimer-bar{
-    background:#2A2013; border-bottom:1px solid var(--nerve-dim);
-    padding:10px 40px; display:flex; align-items:center; gap:16px; flex-wrap:wrap;
-    font-size:12.5px; color:#E8D9A8;
-  }
-  .disclaimer-text{flex:1; min-width:200px; line-height:1.5;}
-  .disclaimer-text b{color:var(--nerve);}
-  .admin-toggle{display:flex; align-items:center; gap:6px; font-size:12px; color:var(--text-mid); cursor:pointer; white-space:nowrap;}
-  .disclaimer-close{background:none; border:none; color:#E8D9A8; font-size:14px; cursor:pointer; padding:4px 8px;}
-  .disclaimer-bar.hidden{display:none;}
-
-  .verify-badge{
-    display:inline-flex; align-items:center; gap:5px; font-size:10.5px; font-family:'IBM Plex Mono',monospace;
-    padding:3px 8px; border-radius:20px; margin-left:8px; white-space:nowrap; vertical-align:middle;
-  }
-  .verify-badge.unverified{background:rgba(193,68,60,.12); color:var(--artery); border:1px solid rgba(193,68,60,.3);}
-  .verify-badge.verified{background:rgba(232,197,71,.12); color:var(--nerve); border:1px solid rgba(232,197,71,.3);}
-  .verify-badge.custom{background:rgba(62,110,142,.15); color:var(--vein); border:1px solid rgba(62,110,142,.3);}
-  .verify-checkbox-row{display:none; align-items:center; gap:6px; margin-top:8px; font-size:12px; color:var(--text-dim);}
-  body.admin-mode .verify-checkbox-row{display:flex;}
-
   /* ---------- Mobile / small viewport optimizations ---------- */
   @media (max-width: 720px){
-    header{padding:18px 18px 14px; flex-direction:column; align-items:stretch;}
+    header{padding:0 18px;}
+    .header-row{padding:18px 0 14px; flex-direction:column; align-items:stretch;}
     header h1{font-size:21px;}
     header .sub{font-size:12px;}
     .system-select{gap:6px; overflow-x:auto; flex-wrap:nowrap; padding-bottom:4px; -webkit-overflow-scrolling:touch;}
     .sys-pill{flex:0 0 auto;}
 
-    nav{padding:0 18px;}
+    nav{overflow-x:auto;}
+    .nav-row{padding:0 18px;}
     nav button{padding:13px 12px; font-size:13px;}
 
     main{padding:22px 18px 60px;}
@@ -274,7 +264,6 @@
     .case-vignette{font-size:13px;}
 
     footer{padding:20px 18px; font-size:11px;}
-    .disclaimer-bar{padding:10px 18px; font-size:11.5px;}
   }
 
   @media (max-width: 380px){
@@ -287,28 +276,26 @@
 <body>
 
 <header>
-  <div class="logo-home" id="logo-home" role="button" tabindex="0" aria-label="홈으로 이동">
-    <span class="eyebrow">Anatomy Atlas</span>
-    <h1>해부학 아틀라스</h1>
-    <div class="sub" id="header-sub">계통을 선택해 학습을 시작하세요</div>
+  <div class="header-row">
+    <div class="logo-home" id="logo-home" role="button" tabindex="0" aria-label="홈으로 이동">
+      <span class="eyebrow">Anatomy Atlas</span>
+      <h1>해부학 아틀라스</h1>
+      <div class="sub" id="header-sub">계통을 선택해 학습을 시작하세요</div>
+    </div>
+    <div class="system-select" id="system-select"></div>
   </div>
-  <div class="system-select" id="system-select"></div>
 </header>
 
 <nav>
-  <button class="active" data-view="overview">개요</button>
-  <button data-view="terms">용어 암기</button>
-  <button data-view="game">🧩 어근 빌더</button>
-  <button data-view="structure">구조 시각화</button>
-  <button data-view="clinical">임상 시나리오</button>
-  <button data-view="exam">종합 테스트</button>
+  <div class="nav-row">
+    <button class="active" data-view="overview">개요</button>
+    <button data-view="terms">용어 암기</button>
+    <button data-view="game">🧩 어근 빌더</button>
+    <button data-view="structure">구조 시각화</button>
+    <button data-view="clinical">임상 시나리오</button>
+    <button data-view="exam">종합 테스트</button>
+  </div>
 </nav>
-
-<div class="disclaimer-bar" id="disclaimer-bar">
-  <span class="disclaimer-text">⚠ 이 안의 의학 정보는 아직 <b>전문가 검수 전</b>입니다. 실제 시험 준비에 쓰기 전 지도교수·조교의 확인을 받으세요.</span>
-  <label class="admin-toggle"><input type="checkbox" id="admin-mode-toggle"> 검수 모드</label>
-  <button class="disclaimer-close" id="disclaimer-close" aria-label="배너 닫기">✕</button>
-</div>
 
 <main>
   <section class="view active" id="view-overview">
@@ -437,6 +424,21 @@ brachial: {
     {tag:"Root word", term:"Axillary", root:"axilla(라틴어)=겨드랑이", def:"겨드랑이 부위 통과. 삼각근 지배 — 어깨 탈구 시 손상 위험."},
     {tag:"Root word", term:"Dermatome", root:"derma(피부)+tome(구역)", def:"하나의 척수신경 후근이 담당하는 피부 구역."},
     {tag:"Root word", term:"Myotome", root:"myo(근육)+tome(구역)", def:"하나의 척수신경이 지배하는 근육군."},
+    {tag:"Root word", term:"Supraclavicular", root:"supra(라틴어)=위 + clavicula(라틴어)=빗장뼈", def:"쇄골 위쪽 부위. 상완신경총의 근(root)이 위치하는 쇄골상와 부위."},
+    {tag:"Root word", term:"Infraclavicular", root:"infra(라틴어)=아래 + clavicula=빗장뼈", def:"쇄골 아래쪽 부위. 상완신경총의 삭(cord) 단계가 위치."},
+    {tag:"Root word", term:"Cutaneous", root:"cutis(라틴어)=피부", def:"피부와 관련된. 감각신경의 분포 영역을 나타낼 때 자주 쓰임."},
+    {tag:"Root word", term:"Cubital", root:"cubitum(라틴어)=팔꿈치", def:"팔꿈치와 관련된. Cubital fossa(주와) — 팔꿈치 앞쪽 오목한 부위."},
+    {tag:"Root word", term:"Antebrachial", root:"ante(라틴어)=앞 + brachium=팔", def:"전완(팔꿈치~손목 사이)과 관련된."},
+    {tag:"Root word", term:"Carpal", root:"carpus(라틴어)=손목", def:"손목뼈와 관련된. Carpal tunnel(손목터널) — 정중신경 통과."},
+    {tag:"Root word", term:"Metacarpal", root:"meta(그리스어)=너머 + carpus=손목", def:"손목 너머(손바닥)의 뼈. 손가락 앞의 다섯 개 뼈."},
+    {tag:"Root word", term:"Phalangeal", root:"phalanx(그리스어)=병사의 대열", def:"손가락·발가락뼈와 관련된."},
+    {tag:"Root word", term:"Deltoid", root:"delta(그리스 문자 Δ)+eidos(모양)", def:"삼각형 모양의 근육(삼각근). 액와신경이 지배."},
+    {tag:"Root word", term:"Scapular", root:"scapula(라틴어)=어깨뼈", def:"어깨뼈(견갑골)와 관련된."},
+    {tag:"Root word", term:"Thoracic", root:"thorax(그리스어)=가슴", def:"가슴과 관련된. Long thoracic nerve(장흉신경)가 전거근을 지배."},
+    {tag:"Root word", term:"Costal", root:"costa(라틴어)=갈비뼈", def:"갈비뼈와 관련된. Intercostal nerve(늑간신경)."},
+    {tag:"Root word", term:"Humeral", root:"humerus(라틴어)=상완골", def:"상완골(위팔뼈)과 관련된."},
+    {tag:"Root word", term:"Palmar", root:"palma(라틴어)=손바닥", def:"손바닥과 관련된. 정중신경의 palmar branch."},
+    {tag:"Root word", term:"Interosseous", root:"inter(라틴어)=사이 + os(뼈)", def:"뼈와 뼈 사이의. Interosseous membrane(골간막), 손 내재근 이름에 사용."},
   ],
   wordParts: {
     "Brachial": [{frag:"Brachi", meaning:"팔"}, {frag:"al", meaning:"~의(형용사)"}],
@@ -447,7 +449,22 @@ brachial: {
     "Median": [{frag:"Medi", meaning:"중간"}, {frag:"an", meaning:"~의"}],
     "Axillary": [{frag:"Axill", meaning:"겨드랑이"}, {frag:"ary", meaning:"~의"}],
     "Dermatome": [{frag:"Derm", meaning:"피부"}, {frag:"a", meaning:"(연결모음)"}, {frag:"tome", meaning:"구역,자르다"}],
-    "Myotome": [{frag:"My", meaning:"근육"}, {frag:"o", meaning:"(연결모음)"}, {frag:"tome", meaning:"구역"}]
+    "Myotome": [{frag:"My", meaning:"근육"}, {frag:"o", meaning:"(연결모음)"}, {frag:"tome", meaning:"구역"}],
+    "Supraclavicular": [{frag:"Supra", meaning:"위"}, {frag:"clavicul", meaning:"빗장뼈"}, {frag:"ar", meaning:"~의"}],
+    "Infraclavicular": [{frag:"Infra", meaning:"아래"}, {frag:"clavicul", meaning:"빗장뼈"}, {frag:"ar", meaning:"~의"}],
+    "Cutaneous": [{frag:"Cutane", meaning:"피부"}, {frag:"ous", meaning:"~의"}],
+    "Cubital": [{frag:"Cubit", meaning:"팔꿈치"}, {frag:"al", meaning:"~의"}],
+    "Antebrachial": [{frag:"Ante", meaning:"앞"}, {frag:"brachi", meaning:"팔"}, {frag:"al", meaning:"~의"}],
+    "Carpal": [{frag:"Carp", meaning:"손목"}, {frag:"al", meaning:"~의"}],
+    "Metacarpal": [{frag:"Meta", meaning:"너머"}, {frag:"carp", meaning:"손목"}, {frag:"al", meaning:"~의"}],
+    "Phalangeal": [{frag:"Phalang", meaning:"병사의 대열"}, {frag:"eal", meaning:"~의"}],
+    "Deltoid": [{frag:"Delt", meaning:"삼각형(그리스문자Δ)"}, {frag:"oid", meaning:"~모양의"}],
+    "Scapular": [{frag:"Scapul", meaning:"어깨뼈"}, {frag:"ar", meaning:"~의"}],
+    "Thoracic": [{frag:"Thorac", meaning:"가슴"}, {frag:"ic", meaning:"~의"}],
+    "Costal": [{frag:"Cost", meaning:"갈비뼈"}, {frag:"al", meaning:"~의"}],
+    "Humeral": [{frag:"Humer", meaning:"상완골"}, {frag:"al", meaning:"~의"}],
+    "Palmar": [{frag:"Palm", meaning:"손바닥"}, {frag:"ar", meaning:"~의"}],
+    "Interosseous": [{frag:"Inter", meaning:"사이"}, {frag:"osse", meaning:"뼈"}, {frag:"ous", meaning:"~의"}]
   },
   referenceImage: {
     url: "https://commons.wikimedia.org/wiki/Special:FilePath/Gray809.png",
@@ -513,6 +530,21 @@ lumbosacral: {
     {tag:"Root word", term:"Popliteal", root:"poples(라틴어)=오금", def:"무릎 뒤쪽(오금) 부위. Popliteal fossa, popliteal artery."},
     {tag:"Root word", term:"Saphenous", root:"고대어원 = 숨겨진/뚜렷한", def:"대퇴신경의 감각 분지·대복재정맥에 붙는 이름. 하퇴 내측 감각."},
     {tag:"Root word", term:"Genicular", root:"geniculum(라틴어)=작은 무릎", def:"무릎 주변을 감싸는 동맥·신경계 명명. Genicular arteries(슬개 주위 동맥)."},
+    {tag:"Root word", term:"Iliac", root:"ilium(라틴어)=엉덩뼈", def:"엉덩뼈(장골)와 관련된."},
+    {tag:"Root word", term:"Inguinal", root:"inguen(라틴어)=사타구니", def:"사타구니(서혜부)와 관련된. Inguinal ligament(서혜인대) 아래로 대퇴신경이 지남."},
+    {tag:"Root word", term:"Patellar", root:"patella(라틴어)=작은 접시,무릎뼈", def:"무릎뼈(슬개골)와 관련된. Patellar reflex(슬개건 반사) — 대퇴신경 검사."},
+    {tag:"Root word", term:"Cruciate", root:"crux(라틴어)=십자", def:"십자 모양의. 전방/후방 십자인대(ACL/PCL)."},
+    {tag:"Root word", term:"Meniscal", root:"meniskos(그리스어)=초승달", def:"반달연골(반월판)과 관련된. 무릎 관절 안의 초승달 모양 연골."},
+    {tag:"Root word", term:"Plantar", root:"planta(라틴어)=발바닥", def:"발바닥과 관련된. Plantar flexion(발바닥굴곡) — 경골신경 지배."},
+    {tag:"Root word", term:"Calcaneal", root:"calcaneus(라틴어)=발꿈치뼈", def:"발꿈치뼈(종골)와 관련된. Calcaneal tendon(아킬레스건)."},
+    {tag:"Root word", term:"Talar", root:"talus(라틴어)=목말뼈,복사뼈", def:"목말뼈(거골)와 관련된. 발목관절을 구성하는 뼈."},
+    {tag:"Root word", term:"Tarsal", root:"tarsos(그리스어)=발목", def:"발목뼈와 관련된."},
+    {tag:"Root word", term:"Metatarsal", root:"meta(그리스어)=너머 + tarsos=발목", def:"발목 너머(발등)의 뼈. 발가락 앞의 다섯 개 뼈."},
+    {tag:"Root word", term:"Quadriceps", root:"quadri(라틴어)=4 + caput=머리", def:"네 갈래로 이루어진 대퇴사두근. 대퇴신경 지배."},
+    {tag:"Root word", term:"Piriformis", root:"pirum(라틴어)=배(과일) + forma=모양", def:"배 모양의 근육. 좌골신경이 이 근육 아래(또는 관통)로 지남 — 이상근증후군."},
+    {tag:"Root word", term:"Perineal", root:"perinaeon(그리스어)=회음부", def:"회음부와 관련된. 음부신경이 지배."},
+    {tag:"Root word", term:"Iliotibial", root:"ilium=엉덩뼈 + tibia=정강이뼈", def:"장골(엉덩뼈)에서 경골(정강이뼈)까지 이어지는 띠(IT band)."},
+    {tag:"Root word", term:"Retinacular", root:"retinere(라틴어)=붙잡다", def:"힘줄을 붙잡아 고정하는 띠(지대, retinaculum)와 관련된. 발목의 신근/굴근 지대 등."},
   ],
   wordParts: {
     "Femoral": [{frag:"Femor", meaning:"넓적다리뼈"}, {frag:"al", meaning:"~의"}],
@@ -524,7 +556,22 @@ lumbosacral: {
     "Gluteal": [{frag:"Glute", meaning:"엉덩이"}, {frag:"al", meaning:"~의"}],
     "Popliteal": [{frag:"Poplite", meaning:"오금"}, {frag:"al", meaning:"~의"}],
     "Saphenous": [{frag:"Saphen", meaning:"숨겨진/뚜렷한"}, {frag:"ous", meaning:"~의"}],
-    "Genicular": [{frag:"Genicul", meaning:"작은 무릎"}, {frag:"ar", meaning:"~의"}]
+    "Genicular": [{frag:"Genicul", meaning:"작은 무릎"}, {frag:"ar", meaning:"~의"}],
+    "Iliac": [{frag:"Ili", meaning:"엉덩뼈"}, {frag:"ac", meaning:"~의"}],
+    "Inguinal": [{frag:"Inguin", meaning:"사타구니"}, {frag:"al", meaning:"~의"}],
+    "Patellar": [{frag:"Patell", meaning:"작은 접시,무릎뼈"}, {frag:"ar", meaning:"~의"}],
+    "Cruciate": [{frag:"Cruci", meaning:"십자"}, {frag:"ate", meaning:"~한 상태의"}],
+    "Meniscal": [{frag:"Menisc", meaning:"초승달"}, {frag:"al", meaning:"~의"}],
+    "Plantar": [{frag:"Plant", meaning:"발바닥"}, {frag:"ar", meaning:"~의"}],
+    "Calcaneal": [{frag:"Calcane", meaning:"발꿈치뼈"}, {frag:"al", meaning:"~의"}],
+    "Talar": [{frag:"Tal", meaning:"목말뼈,복사뼈"}, {frag:"ar", meaning:"~의"}],
+    "Tarsal": [{frag:"Tars", meaning:"발목"}, {frag:"al", meaning:"~의"}],
+    "Metatarsal": [{frag:"Meta", meaning:"너머"}, {frag:"tars", meaning:"발목"}, {frag:"al", meaning:"~의"}],
+    "Quadriceps": [{frag:"Quadri", meaning:"4"}, {frag:"ceps", meaning:"머리"}],
+    "Piriformis": [{frag:"Piri", meaning:"배(과일)"}, {frag:"form", meaning:"모양"}, {frag:"is", meaning:"(명사 어미)"}],
+    "Perineal": [{frag:"Perine", meaning:"회음부"}, {frag:"al", meaning:"~의"}],
+    "Iliotibial": [{frag:"Ilio", meaning:"엉덩뼈"}, {frag:"tibi", meaning:"정강이뼈"}, {frag:"al", meaning:"~의"}],
+    "Retinacular": [{frag:"Retinacul", meaning:"붙잡다"}, {frag:"ar", meaning:"~의"}]
   },
   referenceImage: {
     url: "https://commons.wikimedia.org/wiki/Special:FilePath/Gray828.png",
@@ -591,6 +638,21 @@ cranial: {
     {tag:"Root word", term:"Hypoglossal", root:"hypo(아래)+glossa(혀)", def:"CN12 설하신경 — 혀 아래를 주행, 혀 근육 운동 담당."},
     {tag:"Root word", term:"Trochlear", root:"trochlea(라틴어)=도르래", def:"CN4 활차신경 — 상사근 힘줄이 지나는 도르래 구조에서 이름 유래."},
     {tag:"Root word", term:"Abducens", root:"abducere(라틴어)=밖으로 이끌다", def:"CN6 외전신경 — 외직근을 지배해 눈을 바깥쪽으로 돌림."},
+    {tag:"Root word", term:"Oculomotor", root:"oculus(라틴어)=눈 + motor=움직이는 것", def:"CN3 동안신경 — 안구 운동 대부분, 동공 수축, 안검 거상 담당."},
+    {tag:"Root word", term:"Accessory", root:"accessorius(라틴어)=도와주는,추가의", def:"CN11 부신경 — 흉쇄유돌근과 승모근을 지배하는 '추가된' 신경."},
+    {tag:"Root word", term:"Ophthalmic", root:"ophthalmos(그리스어)=눈", def:"눈과 관련된. 삼차신경의 첫째 분지(안신경)."},
+    {tag:"Root word", term:"Maxillary", root:"maxilla(라틴어)=위턱뼈", def:"위턱뼈와 관련된. 삼차신경의 둘째 분지(상악신경)."},
+    {tag:"Root word", term:"Mandibular", root:"mandibula(라틴어)=아래턱뼈", def:"아래턱뼈와 관련된. 삼차신경의 셋째 분지(하악신경) — 유일하게 운동섬유 포함."},
+    {tag:"Root word", term:"Buccal", root:"bucca(라틴어)=뺨", def:"뺨과 관련된. 안면신경의 buccal branch(협신경가지)."},
+    {tag:"Root word", term:"Palatine", root:"palatum(라틴어)=입천장", def:"입천장과 관련된."},
+    {tag:"Root word", term:"Pharyngeal", root:"pharynx(그리스어)=인두", def:"인두(목구멍)와 관련된. 설인신경·미주신경이 지배."},
+    {tag:"Root word", term:"Laryngeal", root:"larynx(그리스어)=후두", def:"후두(성대가 있는 부위)와 관련된. 미주신경의 recurrent laryngeal nerve(되돌이후두신경)."},
+    {tag:"Root word", term:"Parotid", root:"para(그리스어)=옆 + otos=귀", def:"귀밑샘(이하선). 안면신경이 이 샘 속을 지나가며 갈라짐."},
+    {tag:"Root word", term:"Temporal", root:"tempus(라틴어)=관자놀이", def:"관자놀이(측두부)와 관련된."},
+    {tag:"Root word", term:"Occipital", root:"occiput(라틴어)=뒤통수", def:"뒤통수(후두부)와 관련된."},
+    {tag:"Root word", term:"Zygomatic", root:"zygon(그리스어)=멍에", def:"광대뼈(관골)와 관련된. 안면신경의 zygomatic branch."},
+    {tag:"Root word", term:"Lacrimal", root:"lacrima(라틴어)=눈물", def:"눈물과 관련된. 안면신경이 눈물샘 분비를 지배."},
+    {tag:"Root word", term:"Sublingual", root:"sub(라틴어)=아래 + lingua=혀", def:"혀 아래의. Sublingual gland(혀밑샘) — 안면신경이 분비 지배."},
   ],
   wordParts: {
     "Olfactory": [{frag:"Olfact", meaning:"냄새맡다"}, {frag:"ory", meaning:"~하는"}],
@@ -602,7 +664,22 @@ cranial: {
     "Vagus": [{frag:"Vag", meaning:"방랑하는"}, {frag:"us", meaning:"(명사 어미)"}],
     "Hypoglossal": [{frag:"Hypo", meaning:"아래"}, {frag:"gloss", meaning:"혀"}, {frag:"al", meaning:"~의"}],
     "Trochlear": [{frag:"Trochle", meaning:"도르래"}, {frag:"ar", meaning:"~의"}],
-    "Abducens": [{frag:"Ab", meaning:"밖으로"}, {frag:"duc", meaning:"이끌다"}, {frag:"ens", meaning:"~하는"}]
+    "Abducens": [{frag:"Ab", meaning:"밖으로"}, {frag:"duc", meaning:"이끌다"}, {frag:"ens", meaning:"~하는"}],
+    "Oculomotor": [{frag:"Oculo", meaning:"눈"}, {frag:"motor", meaning:"움직이는 것"}],
+    "Accessory": [{frag:"Access", meaning:"도와주는,추가의"}, {frag:"ory", meaning:"~하는"}],
+    "Ophthalmic": [{frag:"Ophthalm", meaning:"눈"}, {frag:"ic", meaning:"~의"}],
+    "Maxillary": [{frag:"Maxill", meaning:"위턱뼈"}, {frag:"ary", meaning:"~의"}],
+    "Mandibular": [{frag:"Mandibul", meaning:"아래턱뼈"}, {frag:"ar", meaning:"~의"}],
+    "Buccal": [{frag:"Bucc", meaning:"뺨"}, {frag:"al", meaning:"~의"}],
+    "Palatine": [{frag:"Palat", meaning:"입천장"}, {frag:"ine", meaning:"~의"}],
+    "Pharyngeal": [{frag:"Pharyng", meaning:"인두"}, {frag:"eal", meaning:"~의"}],
+    "Laryngeal": [{frag:"Laryng", meaning:"후두"}, {frag:"eal", meaning:"~의"}],
+    "Parotid": [{frag:"Parot", meaning:"귀 옆"}, {frag:"id", meaning:"~의"}],
+    "Temporal": [{frag:"Tempor", meaning:"관자놀이"}, {frag:"al", meaning:"~의"}],
+    "Occipital": [{frag:"Occipit", meaning:"뒤통수"}, {frag:"al", meaning:"~의"}],
+    "Zygomatic": [{frag:"Zygomat", meaning:"멍에"}, {frag:"ic", meaning:"~의"}],
+    "Lacrimal": [{frag:"Lacrim", meaning:"눈물"}, {frag:"al", meaning:"~의"}],
+    "Sublingual": [{frag:"Sub", meaning:"아래"}, {frag:"lingu", meaning:"혀"}, {frag:"al", meaning:"~의"}]
   },
   referenceImage: {
     url: "https://commons.wikimedia.org/wiki/Special:FilePath/1320_The_Cranial_Nerves.jpg",
@@ -647,9 +724,9 @@ cranial: {
     }
   },
   nodeToTerm: {
-    "CN1 후각":"Olfactory", "CN2 시각":"Optic", "CN4 활차":"Trochlear", "CN5 삼차":"Trigeminal",
+    "CN1 후각":"Olfactory", "CN2 시각":"Optic", "CN3 동안":"Oculomotor", "CN4 활차":"Trochlear", "CN5 삼차":"Trigeminal",
     "CN6 외전":"Abducens", "CN7 안면":"Facial", "CN8 전정와우":"Vestibulocochlear",
-    "CN9 설인":"Glossopharyngeal", "CN10 미주":"Vagus", "CN12 설하":"Hypoglossal"
+    "CN9 설인":"Glossopharyngeal", "CN10 미주":"Vagus", "CN11 부신경":"Accessory", "CN12 설하":"Hypoglossal"
   },
   cases: [
     {title:"한쪽 얼굴이 이마까지 처짐", vignette:"한쪽 얼굴 전체(이마 포함)가 처지고 눈을 감지 못함.", answer:"CN7 안면신경 마비 (말초성, Bell's palsy)", explain:"말초성은 이마까지 침범, 중추성은 이마 보존 — 상부 안면근이 양측 대뇌지배를 받기 때문."},
@@ -670,7 +747,7 @@ function loadState(){
     const raw = localStorage.getItem(STORAGE_KEY);
     if(raw) s = JSON.parse(raw);
   }catch(e){}
-  const defaults = { currentSystem:'brachial', currentView:'overview', srs:{}, verified:{}, custom:{}, adminMode:false, adminPin:null, gameHighScore:{} };
+  const defaults = { currentSystem:'brachial', currentView:'overview', srs:{}, custom:{}, gameHighScore:{} };
   return Object.assign({}, defaults, s || {});
 }
 function saveState(){
@@ -763,8 +840,7 @@ function exportContent(){
     kind: 'anatomy-atlas-content-export',
     version: 1,
     exportedAt: new Date().toISOString(),
-    custom: state.custom,
-    verified: state.verified
+    custom: state.custom
   };
   const blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
   const url = URL.createObjectURL(blob);
@@ -802,17 +878,9 @@ function importContent(evt){
           if(!existingIds.has(c.id)){ bucket.cases.push(c); addedCases++; }
         });
       });
-      // Verified flags are only trusted from an import if the importer is
-      // currently in unlocked admin/검수 mode — otherwise a shared file could
-      // be used to silently mark unreviewed content as "verified".
-      let importedVerified = 0;
-      if(data.verified && state.adminMode){
-        Object.keys(data.verified).forEach(id=>{ if(data.verified[id]){ state.verified[id] = true; importedVerified++; } });
-      }
       saveState();
       statusEl.style.color = 'var(--nerve)';
-      statusEl.textContent = `가져오기 완료 — 카드 ${addedTerms}개, 시나리오 ${addedCases}개 추가됨.` +
-        (data.verified && !state.adminMode ? ' (검수 표시는 검수 모드가 아니라서 반영하지 않았습니다.)' : (importedVerified ? ` 검수 표시 ${importedVerified}건 반영.` : ''));
+      statusEl.textContent = `가져오기 완료 — 카드 ${addedTerms}개, 시나리오 ${addedCases}개 추가됨.`;
       renderOverview(); refreshFlashcard(); newQuiz(); buildCases();
     }catch(e){
       statusEl.style.color = 'var(--artery)';
@@ -1446,12 +1514,7 @@ function buildCases(){
     const card = document.createElement('div');
     card.className = 'case-card';
     const isCustom = c.custom;
-    const isVerified = !!state.verified[c.id];
-    const badge = isCustom
-      ? `<span class="verify-badge custom">직접 작성</span>`
-      : (isVerified
-          ? `<span class="verify-badge verified">✓ 검수완료</span>`
-          : `<span class="verify-badge unverified">⚠ 검수 전</span>`);
+    const badge = isCustom ? `<span class="custom-label">직접 작성</span>` : '';
     card.innerHTML = `
       <div class="case-head" onclick="this.parentElement.classList.toggle('open')">
         <div>
@@ -1465,7 +1528,6 @@ function buildCases(){
         <textarea class="self-check-input" placeholder="예상 진단과 근거를 적어보세요..."></textarea>
       </div>
       <div class="case-answer"><span class="a-k">진단</span>${c.answer}<span class="a-k">해설</span>${c.explain}</div>
-      ${!isCustom ? `<div class="verify-checkbox-row"><label><input type="checkbox" ${isVerified?'checked':''} onchange="toggleVerified('${c.id}', this.checked)"> 이 시나리오를 전문가가 검수했음</label></div>` : ''}
     `;
     list.appendChild(card);
   });
@@ -1481,11 +1543,6 @@ function buildCases(){
       <button class="btn primary" onclick="addCustomCase()">추가</button>
     </div>`;
   list.appendChild(addWrap);
-}
-function toggleVerified(caseId, checked){
-  state.verified[caseId] = checked;
-  saveState();
-  buildCases();
 }
 function toggleCaseForm(){
   document.getElementById('case-add-form').classList.toggle('open');
@@ -1504,54 +1561,11 @@ function addCustomCase(){
   renderOverview();
 }
 
-/* ================= DISCLAIMER / ADMIN MODE ================= */
-function initDisclaimer(){
-  const bar = document.getElementById('disclaimer-bar');
-  const closeBtn = document.getElementById('disclaimer-close');
-  const adminCheckbox = document.getElementById('admin-mode-toggle');
-
-  if(sessionStorage.getItem('anatomy_disclaimer_dismissed') === '1'){
-    bar.classList.add('hidden');
-  }
-  closeBtn.addEventListener('click', ()=>{
-    bar.classList.add('hidden');
-    try{ sessionStorage.setItem('anatomy_disclaimer_dismissed','1'); }catch(e){}
-  });
-
-  adminCheckbox.checked = !!state.adminMode;
-  document.body.classList.toggle('admin-mode', !!state.adminMode);
-  adminCheckbox.addEventListener('change', ()=>{
-    if(adminCheckbox.checked){
-      if(!state.adminPin){
-        const pin = prompt('검수 모드 PIN을 새로 만드세요 (교수/조교와 공유할 숫자, 4자리 이상).\n※ 브라우저 안에서만 작동하는 간단한 잠금이며, 강력한 보안은 아닙니다.');
-        if(!pin || pin.trim().length < 4){
-          alert('4자리 이상 PIN이 필요합니다. 검수 모드를 켜지 않았습니다.');
-          adminCheckbox.checked = false;
-          return;
-        }
-        state.adminPin = pin.trim();
-        saveState();
-      } else {
-        const entered = prompt('검수 모드 PIN을 입력하세요.');
-        if(entered !== state.adminPin){
-          alert('PIN이 일치하지 않습니다.');
-          adminCheckbox.checked = false;
-          return;
-        }
-      }
-    }
-    state.adminMode = adminCheckbox.checked;
-    saveState();
-    document.body.classList.toggle('admin-mode', state.adminMode);
-  });
-}
-
 /* ================= INIT ================= */
 function init(){
   renderSystemSelect();
   document.getElementById('header-sub').textContent = SYSTEMS[state.currentSystem].sub;
   document.getElementById('structure-title').textContent = '구조 시각화 — ' + SYSTEMS[state.currentSystem].label;
-  initDisclaimer();
 
   const hashView = location.hash ? location.hash.slice(1) : null;
   const startView = VALID_VIEWS.includes(hashView) ? hashView : (VALID_VIEWS.includes(state.currentView) ? state.currentView : 'overview');
