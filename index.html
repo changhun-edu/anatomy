@@ -69,6 +69,14 @@
   .progress-bar-track{background:var(--ink-soft); height:8px; border-radius:4px; overflow:hidden; margin-top:10px;}
   .progress-bar-fill{background:var(--nerve); height:100%; transition:width .3s;}
   .share-panel{margin-top:16px;}
+  .onboarding-card{background:var(--ink-card); border:1px solid var(--line); border-radius:8px; padding:22px; margin-bottom:28px;}
+  .onboarding-title{font-family:'Fraunces',serif; font-size:17px; margin-bottom:16px;}
+  .onboarding-steps{display:flex; flex-direction:column; gap:12px;}
+  .ob-step{display:flex; gap:14px; align-items:flex-start; cursor:pointer; padding:10px; border-radius:6px; transition:background .15s; border:1px solid transparent;}
+  .ob-step:hover{background:var(--ink-soft); border-color:var(--nerve-dim);}
+  .ob-num{flex:0 0 28px; height:28px; background:var(--nerve); color:var(--ink); border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:'Fraunces',serif; font-size:14px; font-weight:700; margin-top:2px;}
+  .ob-label{font-size:14px; font-weight:500; margin-bottom:3px;}
+  .ob-desc{font-size:12.5px; color:var(--text-dim); line-height:1.5;}
   .share-actions{display:flex; gap:10px; flex-wrap:wrap; margin-top:14px;}
   .share-status{margin-top:10px; font-size:12.5px; color:var(--nerve); min-height:16px;}
 
@@ -76,6 +84,16 @@
   .flash-stage{flex:1 1 380px; min-width:320px;}
   .srs-status{display:flex; gap:16px; margin-bottom:12px; font-size:12px; color:var(--text-dim);}
   .srs-status b{color:var(--nerve);}
+  .term-filter-row{display:flex; gap:8px; margin-bottom:18px; flex-wrap:wrap;}
+  .term-filter-btn{background:var(--ink-card); border:1px solid var(--line); color:var(--text-mid); padding:7px 14px; border-radius:20px; font-size:12.5px; cursor:pointer; font-family:'Inter',sans-serif; font-weight:500; transition:.15s;}
+  .term-filter-btn:hover{border-color:var(--nerve-dim);}
+  .term-filter-btn.active{background:var(--nerve); color:var(--ink); border-color:var(--nerve);}
+  .tag-badge{
+    display:inline-block; font-size:9.5px; font-family:'IBM Plex Mono',monospace;
+    padding:2px 7px; border-radius:10px; margin-left:6px; vertical-align:middle; letter-spacing:.04em;
+  }
+  .tag-badge.핵심{background:rgba(232,197,71,.15); color:var(--nerve); border:1px solid rgba(232,197,71,.3);}
+  .tag-badge.심화{background:rgba(62,110,142,.15); color:var(--vein); border:1px solid rgba(62,110,142,.3);}
   .flashcard{background:var(--ink-card); border:1px solid var(--line); border-radius:8px; min-height:220px; padding:28px; cursor:pointer; display:flex; flex-direction:column; justify-content:center; position:relative; transition:border-color .2s;}
   .flashcard:hover{border-color:var(--nerve-dim);}
   .flashcard .tag{position:absolute; top:16px; left:20px; font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--text-dim); letter-spacing:.08em; text-transform:uppercase;}
@@ -301,6 +319,48 @@
   <section class="view active" id="view-overview">
     <h2 class="section-title">이 아틀라스가 하는 일</h2>
     <p class="section-desc">계통별로 용어 암기 → 구조 파악 → 임상 연계까지 하나의 흐름으로 학습합니다. 카드 암기는 간격반복(SRS) 방식이라 자주 틀리는 카드가 더 자주 등장합니다.</p>
+
+    <div class="onboarding-card">
+      <div class="onboarding-title">📋 오늘의 추천 학습 순서</div>
+      <div class="onboarding-steps">
+        <div class="ob-step" onclick="switchView('terms',true)">
+          <div class="ob-num">1</div>
+          <div class="ob-body">
+            <div class="ob-label">⭐ 핵심 용어 암기 — 10개부터 시작</div>
+            <div class="ob-desc">필터를 "핵심만"으로 설정하고 플래시카드를 먼저 돌리세요. 모두 Box 2 이상이 되면 다음 단계로.</div>
+          </div>
+        </div>
+        <div class="ob-step" onclick="switchView('game',true)">
+          <div class="ob-num">2</div>
+          <div class="ob-body">
+            <div class="ob-label">🧩 어근 빌더 게임 — 어원 굳히기</div>
+            <div class="ob-desc">방금 외운 용어를 어근 조각으로 조립해보면서 철자와 의미를 동시에 잡습니다.</div>
+          </div>
+        </div>
+        <div class="ob-step" onclick="switchView('structure',true)">
+          <div class="ob-num">3</div>
+          <div class="ob-body">
+            <div class="ob-label">🗺 구조 시각화 — 위치 감각 잡기</div>
+            <div class="ob-desc">각 신경·구조를 클릭해서 어디서 나와 어디로 가는지 흐름을 파악합니다. 연결된 카드·케이스로 바로 이동도 가능합니다.</div>
+          </div>
+        </div>
+        <div class="ob-step" onclick="switchView('clinical',true)">
+          <div class="ob-num">4</div>
+          <div class="ob-body">
+            <div class="ob-label">🩺 임상 시나리오 — 실전 추론</div>
+            <div class="ob-desc">증상을 먼저 읽고 스스로 진단해본 뒤 정답을 확인합니다. 케이스마다 자가진단 입력란이 있습니다.</div>
+          </div>
+        </div>
+        <div class="ob-step" onclick="switchView('exam',true)">
+          <div class="ob-num">5</div>
+          <div class="ob-body">
+            <div class="ob-label">📝 종합 테스트 — 최종 점검</div>
+            <div class="ob-desc">용어+케이스를 섞어 무작위 출제. SRS 진행률에 영향 없는 별도 평가입니다.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="stat-grid" id="stat-grid"></div>
     <div class="overview-panel">
       <p><b>해부학적 색 코딩(Netter 관례)</b>을 그대로 사용합니다 — 신경은 노란색, 동맥은 빨간색, 정맥은 파란색, 근육은 갈색 계열로 표시합니다.</p>
@@ -329,6 +389,11 @@
   <section class="view" id="view-terms">
     <h2 class="section-title">용어 암기 (간격반복)</h2>
     <p class="section-desc">"기억났어요"를 누르면 다음 복습일이 늦춰지고, "다시 볼게요"를 누르면 곧 다시 나옵니다.</p>
+    <div class="term-filter-row">
+      <button class="term-filter-btn active" data-filter="all" onclick="setTermFilter('all')">전체</button>
+      <button class="term-filter-btn" data-filter="핵심" onclick="setTermFilter('핵심')">⭐ 핵심만</button>
+      <button class="term-filter-btn" data-filter="심화" onclick="setTermFilter('심화')">📚 심화만</button>
+    </div>
     <div class="flash-wrap">
       <div class="flash-stage">
         <div class="srs-status" id="srs-status"></div>
@@ -354,6 +419,11 @@
             <input type="text" id="term-term-input" placeholder="용어 (예: Popliteal)">
             <input type="text" id="term-root-input" placeholder="어원/root (예: poples(라틴어)=오금)">
             <textarea id="term-def-input" placeholder="설명/정의"></textarea>
+            <div style="font-size:12px; color:var(--text-dim); line-height:1.5; padding:4px 0;">
+              🧩 <b>어근 빌더 게임에 포함하려면</b> 아래에 조각을 입력하세요. 비워두면 게임에서 제외됩니다.<br>
+              형식: <span style="font-family:monospace;">조각1|뜻1, 조각2|뜻2</span> &nbsp; 예: <span style="font-family:monospace;">Poplite|오금, al|~의</span>
+            </div>
+            <input type="text" id="term-parts-input" placeholder="게임 조각 (선택): Poplite|오금, al|~의">
             <button class="btn primary" onclick="addCustomTerm()">추가</button>
           </div>
         </div>
@@ -414,31 +484,31 @@ const SYSTEMS = {
 brachial: {
   label: "상지 · 상완신경총", sub: "Brachial Plexus · C5–T1",
   terms: [
-    {tag:"Root word", term:"Brachial", root:"brachium(라틴어)=팔", def:"팔과 관련된 구조. 예: brachial plexus(상완신경총), brachialis(상완근)"},
-    {tag:"Root word", term:"Plexus", root:"plexus(라틴어)=짜임,그물망", def:"여러 신경 가지가 얽혀 재배열되는 구조. 상완신경총, 요천추신경총 등."},
-    {tag:"Root word", term:"Musculocutaneous", root:"musculo(근육)+cutaneous(피부)", def:"근육·피부 모두 지배. 이두근(운동)과 전완 외측 피부(감각)를 지배."},
-    {tag:"Root word", term:"-plegia/-paresis", root:"그리스어 plege(타격)/paresis(이완)", def:"-plegia=완전마비, -paresis=불완전마비."},
-    {tag:"Root word", term:"Radial", root:"radius(라틴어)=요골", def:"요골을 따라 주행. Radial nerve(요골신경)."},
-    {tag:"Root word", term:"Ulnar", root:"ulna(라틴어)=척골", def:"척골 안쪽을 따라 주행. 척골신경구를 지나 새끼손가락 감각 담당."},
-    {tag:"Root word", term:"Median", root:"medianus(라틴어)=중간의", def:"팔의 정중앙 주행. 손목터널을 통과, 무지구 근육 지배."},
-    {tag:"Root word", term:"Axillary", root:"axilla(라틴어)=겨드랑이", def:"겨드랑이 부위 통과. 삼각근 지배 — 어깨 탈구 시 손상 위험."},
-    {tag:"Root word", term:"Dermatome", root:"derma(피부)+tome(구역)", def:"하나의 척수신경 후근이 담당하는 피부 구역."},
-    {tag:"Root word", term:"Myotome", root:"myo(근육)+tome(구역)", def:"하나의 척수신경이 지배하는 근육군."},
-    {tag:"Root word", term:"Supraclavicular", root:"supra(라틴어)=위 + clavicula(라틴어)=빗장뼈", def:"쇄골 위쪽 부위. 상완신경총의 근(root)이 위치하는 쇄골상와 부위."},
-    {tag:"Root word", term:"Infraclavicular", root:"infra(라틴어)=아래 + clavicula=빗장뼈", def:"쇄골 아래쪽 부위. 상완신경총의 삭(cord) 단계가 위치."},
-    {tag:"Root word", term:"Cutaneous", root:"cutis(라틴어)=피부", def:"피부와 관련된. 감각신경의 분포 영역을 나타낼 때 자주 쓰임."},
-    {tag:"Root word", term:"Cubital", root:"cubitum(라틴어)=팔꿈치", def:"팔꿈치와 관련된. Cubital fossa(주와) — 팔꿈치 앞쪽 오목한 부위."},
-    {tag:"Root word", term:"Antebrachial", root:"ante(라틴어)=앞 + brachium=팔", def:"전완(팔꿈치~손목 사이)과 관련된."},
-    {tag:"Root word", term:"Carpal", root:"carpus(라틴어)=손목", def:"손목뼈와 관련된. Carpal tunnel(손목터널) — 정중신경 통과."},
-    {tag:"Root word", term:"Metacarpal", root:"meta(그리스어)=너머 + carpus=손목", def:"손목 너머(손바닥)의 뼈. 손가락 앞의 다섯 개 뼈."},
-    {tag:"Root word", term:"Phalangeal", root:"phalanx(그리스어)=병사의 대열", def:"손가락·발가락뼈와 관련된."},
-    {tag:"Root word", term:"Deltoid", root:"delta(그리스 문자 Δ)+eidos(모양)", def:"삼각형 모양의 근육(삼각근). 액와신경이 지배."},
-    {tag:"Root word", term:"Scapular", root:"scapula(라틴어)=어깨뼈", def:"어깨뼈(견갑골)와 관련된."},
-    {tag:"Root word", term:"Thoracic", root:"thorax(그리스어)=가슴", def:"가슴과 관련된. Long thoracic nerve(장흉신경)가 전거근을 지배."},
-    {tag:"Root word", term:"Costal", root:"costa(라틴어)=갈비뼈", def:"갈비뼈와 관련된. Intercostal nerve(늑간신경)."},
-    {tag:"Root word", term:"Humeral", root:"humerus(라틴어)=상완골", def:"상완골(위팔뼈)과 관련된."},
-    {tag:"Root word", term:"Palmar", root:"palma(라틴어)=손바닥", def:"손바닥과 관련된. 정중신경의 palmar branch."},
-    {tag:"Root word", term:"Interosseous", root:"inter(라틴어)=사이 + os(뼈)", def:"뼈와 뼈 사이의. Interosseous membrane(골간막), 손 내재근 이름에 사용."},
+    {tag:"핵심", term:"Brachial", root:"brachium(라틴어)=팔", def:"팔과 관련된 구조. 예: brachial plexus(상완신경총), brachialis(상완근)"},
+    {tag:"핵심", term:"Plexus", root:"plexus(라틴어)=짜임,그물망", def:"여러 신경 가지가 얽혀 재배열되는 구조. 상완신경총, 요천추신경총 등."},
+    {tag:"핵심", term:"Radial", root:"radius(라틴어)=요골", def:"요골을 따라 주행. Radial nerve(요골신경)."},
+    {tag:"핵심", term:"Ulnar", root:"ulna(라틴어)=척골", def:"척골 안쪽을 따라 주행. 척골신경구를 지나 새끼손가락 감각 담당."},
+    {tag:"핵심", term:"Median", root:"medianus(라틴어)=중간의", def:"팔의 정중앙 주행. 손목터널을 통과, 무지구 근육 지배."},
+    {tag:"핵심", term:"Axillary", root:"axilla(라틴어)=겨드랑이", def:"겨드랑이 부위 통과. 삼각근 지배 — 어깨 탈구 시 손상 위험."},
+    {tag:"핵심", term:"Musculocutaneous", root:"musculo(근육)+cutaneous(피부)", def:"근육·피부 모두 지배. 이두근(운동)과 전완 외측 피부(감각)를 지배."},
+    {tag:"핵심", term:"Dermatome", root:"derma(피부)+tome(구역)", def:"하나의 척수신경 후근이 담당하는 피부 구역."},
+    {tag:"핵심", term:"Myotome", root:"myo(근육)+tome(구역)", def:"하나의 척수신경이 지배하는 근육군."},
+    {tag:"핵심", term:"-plegia/-paresis", root:"그리스어 plege(타격)/paresis(이완)", def:"-plegia=완전마비, -paresis=불완전마비."},
+    {tag:"심화", term:"Supraclavicular", root:"supra(라틴어)=위 + clavicula(라틴어)=빗장뼈", def:"쇄골 위쪽 부위. 상완신경총의 근(root)이 위치하는 쇄골상와 부위."},
+    {tag:"심화", term:"Infraclavicular", root:"infra(라틴어)=아래 + clavicula=빗장뼈", def:"쇄골 아래쪽 부위. 상완신경총의 삭(cord) 단계가 위치."},
+    {tag:"심화", term:"Cutaneous", root:"cutis(라틴어)=피부", def:"피부와 관련된. 감각신경의 분포 영역을 나타낼 때 자주 쓰임."},
+    {tag:"심화", term:"Cubital", root:"cubitum(라틴어)=팔꿈치", def:"팔꿈치와 관련된. Cubital fossa(주와) — 팔꿈치 앞쪽 오목한 부위."},
+    {tag:"심화", term:"Antebrachial", root:"ante(라틴어)=앞 + brachium=팔", def:"전완(팔꿈치~손목 사이)과 관련된."},
+    {tag:"심화", term:"Carpal", root:"carpus(라틴어)=손목", def:"손목뼈와 관련된. Carpal tunnel(손목터널) — 정중신경 통과."},
+    {tag:"심화", term:"Metacarpal", root:"meta(그리스어)=너머 + carpus=손목", def:"손목 너머(손바닥)의 뼈. 손가락 앞의 다섯 개 뼈."},
+    {tag:"심화", term:"Phalangeal", root:"phalanx(그리스어)=병사의 대열", def:"손가락·발가락뼈와 관련된."},
+    {tag:"심화", term:"Deltoid", root:"delta(그리스 문자 Δ)+eidos(모양)", def:"삼각형 모양의 근육(삼각근). 액와신경이 지배."},
+    {tag:"심화", term:"Scapular", root:"scapula(라틴어)=어깨뼈", def:"어깨뼈(견갑골)와 관련된."},
+    {tag:"심화", term:"Thoracic", root:"thorax(그리스어)=가슴", def:"가슴과 관련된. Long thoracic nerve(장흉신경)가 전거근을 지배."},
+    {tag:"심화", term:"Costal", root:"costa(라틴어)=갈비뼈", def:"갈비뼈와 관련된. Intercostal nerve(늑간신경)."},
+    {tag:"심화", term:"Humeral", root:"humerus(라틴어)=상완골", def:"상완골(위팔뼈)과 관련된."},
+    {tag:"심화", term:"Palmar", root:"palma(라틴어)=손바닥", def:"손바닥과 관련된. 정중신경의 palmar branch."},
+    {tag:"심화", term:"Interosseous", root:"inter(라틴어)=사이 + os(뼈)", def:"뼈와 뼈 사이의. Interosseous membrane(골간막), 손 내재근 이름에 사용."},
   ],
   wordParts: {
     "Brachial": [{frag:"Brachi", meaning:"팔"}, {frag:"al", meaning:"~의(형용사)"}],
@@ -509,42 +579,48 @@ brachial: {
   },
   cases: [
     {title:"신생아 출산 후 팔이 축 처짐", vignette:"견인 분만 후 신생아. 팔이 내회전, 팔꿈치는 펴진 채 'waiter's tip' 자세. 손목·손가락은 정상.", answer:"Erb-Duchenne 마비 (C5-C6, 상완신경총 상부형)", explain:"상간이 견인력에 취약. 어깨 외전·팔꿈치 굴곡 근육 약화, 손 내재근은 보존."},
-    {title:"오토바이 사고 후 손목이 처짐", vignette:"상완골 중간부 골절. 손목·손가락을 펴지 못하고 손등 요측 감각 저하.", answer:"요골신경 손상", explain:"요골신경구를 나선형으로 지나 골절 시 손상 위험 높음."},
-    {title:"팔꿈치를 오래 괸 후 손가락이 갈퀴 모양", vignette:"척골신경구 압박 후 4·5번째 손가락 갈퀴 모양, 척측 감각 저하.", answer:"척골신경 손상", explain:"내측삭 기원, 손 내재근 대부분 지배."},
-    {title:"어깨 탈구 후 삼각근 부위 감각 저하", vignette:"전방 어깨 탈구 정복 후 외전 어려움, 어깨 바깥쪽 감각 둔화.", answer:"액와신경 손상", explain:"상완골 외과경 아래 지남 — 탈구·경부골절 시 손상."},
-    {title:"손목터널증후군 의심 환자", vignette:"사무직. 밤에 엄지~중지 저림, 무지구 위축.", answer:"정중신경 압박 — 손목터널증후군", explain:"손목터널을 지나며 압박에 취약."}
+    {title:"오토바이 사고 후 손목이 처짐", vignette:"상완골 중간부 골절. 손목·손가락을 펴지 못하고(wrist drop) 손등 요측 감각 저하.", answer:"요골신경 손상", explain:"요골신경구(spiral groove)를 나선형으로 지나 중간 골절 시 손상 위험 높음."},
+    {title:"팔꿈치를 오래 괸 후 손가락이 갈퀴 모양", vignette:"척골신경구 압박 후 4·5번째 손가락 갈퀴 모양(claw hand), 척측 감각 저하.", answer:"척골신경 손상 (cubital tunnel syndrome)", explain:"내측삭 기원. 손 내재근 대부분 지배 — 팔꿈치 굴곡 자세 장시간 유지 시 위험."},
+    {title:"어깨 탈구 후 삼각근 부위 감각 저하", vignette:"전방 어깨 탈구 정복 후 팔 외전 어려움, 삼각근 부위(deltoid 부위) 감각 둔화.", answer:"액와신경 손상", explain:"상완골 외과경(surgical neck) 바로 아래를 지남. 탈구·상완골 경부 골절 시 손상."},
+    {title:"손목터널증후군 의심 환자", vignette:"사무직 근로자. 밤에 엄지~중지 저림(Tinel·Phalen 검사 양성), 무지구(thenar) 위축.", answer:"정중신경 압박 — 손목터널증후군", explain:"손목터널(carpal tunnel)을 통과하며 압박에 취약. 무지구 위축은 만성 압박 시 발생."},
+    {title:"전거근 마비로 날개견갑 발생", vignette:"겨드랑이 수술 후 팔을 앞으로 들면 어깨뼈가 등 쪽으로 튀어나옴(winged scapula).", answer:"장흉신경(long thoracic nerve) 손상", explain:"C5-C7에서 직접 기원(후삭 아님). 전거근을 지배 — 손상 시 견갑골을 흉벽에 고정하지 못해 날개 모양으로 돌출."},
+    {title:"쇄골 골절 후 팔 내전·신전 약화", vignette:"쇄골 원위부 골절 후 광배근·대원근 근력 저하, 팔꿈치 신전도 약간 약해짐.", answer:"후삭(Posterior cord) 손상", explain:"쇄골하 부위를 지나는 후삭이 쇄골 골절 시 압박될 수 있음. 요골신경·액와신경 공통 기원."},
+    {title:"손가락 끝만 집기 어렵고 새끼손가락이 벌어짐", vignette:"고혈압 환자. 무지와 검지로 동전 집기 어렵고(OK sign 불가), 새끼손가락이 자연스럽게 벌어져 있음.", answer:"정중신경 + 척골신경 복합 손상 의심 (또는 전골간신경 손상)", explain:"OK sign 불가는 전골간신경(anterior interosseous nerve) 손상 징후. 새끼손가락 외전은 척골신경 지배 소지외전근 이상."},
+    {title:"어깨 근위부 골절 후 외회전 완전 불능", vignette:"상완골 근위부 골절. 팔을 바깥쪽으로 돌리지 못하고(외회전 불능), 어깨 외측 감각 저하.", answer:"액와신경 + 소원근 손상", explain:"소원근(teres minor)과 삼각근 모두 액와신경 지배. 상완골 근위부 골절에서 함께 손상 가능."},
+    {title:"목 신경근 증상 — 팔꿈치 굴곡·손목 신전 약화", vignette:"경추 추간판 탈출로 팔꿈치 굴곡(+이두근 반사↓)과 손목 신전이 약화됨.", answer:"C5-C6 신경근 압박", explain:"C5: 어깨 외전·팔꿈치 굴곡 / C6: 손목 신전·이두근 반사. 두 근이 함께 약화되면 C5-C6가 공통으로 기여하는 근육들."},
+    {title:"목 신경근 증상 — 손가락 신전·삼두근 약화", vignette:"경추 7번 추간판 탈출. 손가락을 펴기 어렵고 삼두근 반사가 저하됨.", answer:"C7 신경근 압박", explain:"C7: 손가락 신전근·삼두근 지배. 삼두근 반사(triceps reflex) 소실이 C7 손상의 표지."},
+    {title:"분만 중 팔 과도 신전 — 하부형 마비", vignette:"난산. 출생 직후 신생아의 손·손가락을 움직이지 못하고, Horner 증후군(눈꺼풀 처짐·동공 축소)이 동반.", answer:"Klumpke 마비 (C8-T1, 상완신경총 하부형)", explain:"하간(inferior trunk) 및 내측삭 손상. T1 기여 교감신경 침범 시 Horner 증후군 동반 가능."}
   ]
 },
 
-/* ---------- 하지: 요천추신경총 ---------- */
 lumbosacral: {
   label: "하지 · 요천추신경총", sub: "Lumbosacral Plexus · L2–S3",
   terms: [
-    {tag:"Root word", term:"Femoral", root:"femur(라틴어)=넓적다리뼈", def:"대퇴신경 — 대퇴사두근 지배, 슬관절 신전 담당."},
-    {tag:"Root word", term:"Obturator", root:"obturare(라틴어)=막다,폐쇄하다", def:"폐쇄공(obturator foramen)을 지나는 신경. 내전근군 지배."},
-    {tag:"Root word", term:"Sciatic", root:"ischion(그리스어)=궁둥이", def:"인체 최대 신경. 경골신경·총비골신경으로 분지."},
-    {tag:"Root word", term:"Tibial", root:"tibia(라틴어)=정강이뼈", def:"경골신경 — 하퇴 후면 근육, 발바닥 감각 담당."},
-    {tag:"Root word", term:"Fibular(Peroneal)", root:"fibula(라틴어)=핀,걸쇠", def:"비골신경 — 비골두 부위 표재, 발등굴곡 담당. 손상 시 foot drop."},
-    {tag:"Root word", term:"Pudendal", root:"pudere(라틴어)=부끄러워하다", def:"음부신경 — 회음부 감각, 괄약근 지배."},
-    {tag:"Root word", term:"Gluteal", root:"gloutos(그리스어)=엉덩이", def:"둔부 근육을 지배하는 신경(상둔/하둔신경)."},
-    {tag:"Root word", term:"Popliteal", root:"poples(라틴어)=오금", def:"무릎 뒤쪽(오금) 부위. Popliteal fossa, popliteal artery."},
-    {tag:"Root word", term:"Saphenous", root:"고대어원 = 숨겨진/뚜렷한", def:"대퇴신경의 감각 분지·대복재정맥에 붙는 이름. 하퇴 내측 감각."},
-    {tag:"Root word", term:"Genicular", root:"geniculum(라틴어)=작은 무릎", def:"무릎 주변을 감싸는 동맥·신경계 명명. Genicular arteries(슬개 주위 동맥)."},
-    {tag:"Root word", term:"Iliac", root:"ilium(라틴어)=엉덩뼈", def:"엉덩뼈(장골)와 관련된."},
-    {tag:"Root word", term:"Inguinal", root:"inguen(라틴어)=사타구니", def:"사타구니(서혜부)와 관련된. Inguinal ligament(서혜인대) 아래로 대퇴신경이 지남."},
-    {tag:"Root word", term:"Patellar", root:"patella(라틴어)=작은 접시,무릎뼈", def:"무릎뼈(슬개골)와 관련된. Patellar reflex(슬개건 반사) — 대퇴신경 검사."},
-    {tag:"Root word", term:"Cruciate", root:"crux(라틴어)=십자", def:"십자 모양의. 전방/후방 십자인대(ACL/PCL)."},
-    {tag:"Root word", term:"Meniscal", root:"meniskos(그리스어)=초승달", def:"반달연골(반월판)과 관련된. 무릎 관절 안의 초승달 모양 연골."},
-    {tag:"Root word", term:"Plantar", root:"planta(라틴어)=발바닥", def:"발바닥과 관련된. Plantar flexion(발바닥굴곡) — 경골신경 지배."},
-    {tag:"Root word", term:"Calcaneal", root:"calcaneus(라틴어)=발꿈치뼈", def:"발꿈치뼈(종골)와 관련된. Calcaneal tendon(아킬레스건)."},
-    {tag:"Root word", term:"Talar", root:"talus(라틴어)=목말뼈,복사뼈", def:"목말뼈(거골)와 관련된. 발목관절을 구성하는 뼈."},
-    {tag:"Root word", term:"Tarsal", root:"tarsos(그리스어)=발목", def:"발목뼈와 관련된."},
-    {tag:"Root word", term:"Metatarsal", root:"meta(그리스어)=너머 + tarsos=발목", def:"발목 너머(발등)의 뼈. 발가락 앞의 다섯 개 뼈."},
-    {tag:"Root word", term:"Quadriceps", root:"quadri(라틴어)=4 + caput=머리", def:"네 갈래로 이루어진 대퇴사두근. 대퇴신경 지배."},
-    {tag:"Root word", term:"Piriformis", root:"pirum(라틴어)=배(과일) + forma=모양", def:"배 모양의 근육. 좌골신경이 이 근육 아래(또는 관통)로 지남 — 이상근증후군."},
-    {tag:"Root word", term:"Perineal", root:"perinaeon(그리스어)=회음부", def:"회음부와 관련된. 음부신경이 지배."},
-    {tag:"Root word", term:"Iliotibial", root:"ilium=엉덩뼈 + tibia=정강이뼈", def:"장골(엉덩뼈)에서 경골(정강이뼈)까지 이어지는 띠(IT band)."},
-    {tag:"Root word", term:"Retinacular", root:"retinere(라틴어)=붙잡다", def:"힘줄을 붙잡아 고정하는 띠(지대, retinaculum)와 관련된. 발목의 신근/굴근 지대 등."},
+    {tag:"핵심", term:"Femoral", root:"femur(라틴어)=넓적다리뼈", def:"대퇴신경 — 대퇴사두근 지배, 슬관절 신전 담당."},
+    {tag:"핵심", term:"Obturator", root:"obturare(라틴어)=막다,폐쇄하다", def:"폐쇄공(obturator foramen)을 지나는 신경. 내전근군 지배."},
+    {tag:"핵심", term:"Sciatic", root:"ischion(그리스어)=궁둥이", def:"인체 최대 신경. 경골신경·총비골신경으로 분지."},
+    {tag:"핵심", term:"Tibial", root:"tibia(라틴어)=정강이뼈", def:"경골신경 — 하퇴 후면 근육, 발바닥 감각 담당."},
+    {tag:"핵심", term:"Fibular(Peroneal)", root:"fibula(라틴어)=핀,걸쇠", def:"비골신경 — 비골두 부위 표재, 발등굴곡 담당. 손상 시 foot drop."},
+    {tag:"핵심", term:"Pudendal", root:"pudere(라틴어)=부끄러워하다", def:"음부신경 — 회음부 감각, 괄약근 지배."},
+    {tag:"핵심", term:"Gluteal", root:"gloutos(그리스어)=엉덩이", def:"둔부 근육을 지배하는 신경(상둔/하둔신경)."},
+    {tag:"핵심", term:"Popliteal", root:"poples(라틴어)=오금", def:"무릎 뒤쪽(오금) 부위. Popliteal fossa, popliteal artery."},
+    {tag:"핵심", term:"Saphenous", root:"고대어원 = 숨겨진/뚜렷한", def:"대퇴신경의 감각 분지·대복재정맥에 붙는 이름. 하퇴 내측 감각."},
+    {tag:"핵심", term:"Genicular", root:"geniculum(라틴어)=작은 무릎", def:"무릎 주변을 감싸는 동맥·신경계 명명. Genicular arteries(슬개 주위 동맥)."},
+    {tag:"심화", term:"Iliac", root:"ilium(라틴어)=엉덩뼈", def:"엉덩뼈(장골)와 관련된."},
+    {tag:"심화", term:"Inguinal", root:"inguen(라틴어)=사타구니", def:"사타구니(서혜부)와 관련된. Inguinal ligament(서혜인대) 아래로 대퇴신경이 지남."},
+    {tag:"심화", term:"Patellar", root:"patella(라틴어)=작은 접시,무릎뼈", def:"무릎뼈(슬개골)와 관련된. Patellar reflex(슬개건 반사) — 대퇴신경 검사."},
+    {tag:"심화", term:"Cruciate", root:"crux(라틴어)=십자", def:"십자 모양의. 전방/후방 십자인대(ACL/PCL)."},
+    {tag:"심화", term:"Meniscal", root:"meniskos(그리스어)=초승달", def:"반달연골(반월판)과 관련된. 무릎 관절 안의 초승달 모양 연골."},
+    {tag:"심화", term:"Plantar", root:"planta(라틴어)=발바닥", def:"발바닥과 관련된. Plantar flexion(발바닥굴곡) — 경골신경 지배."},
+    {tag:"심화", term:"Calcaneal", root:"calcaneus(라틴어)=발꿈치뼈", def:"발꿈치뼈(종골)와 관련된. Calcaneal tendon(아킬레스건)."},
+    {tag:"심화", term:"Talar", root:"talus(라틴어)=목말뼈,복사뼈", def:"목말뼈(거골)와 관련된. 발목관절을 구성하는 뼈."},
+    {tag:"심화", term:"Tarsal", root:"tarsos(그리스어)=발목", def:"발목뼈와 관련된."},
+    {tag:"심화", term:"Metatarsal", root:"meta(그리스어)=너머 + tarsos=발목", def:"발목 너머(발등)의 뼈. 발가락 앞의 다섯 개 뼈."},
+    {tag:"심화", term:"Quadriceps", root:"quadri(라틴어)=4 + caput=머리", def:"네 갈래로 이루어진 대퇴사두근. 대퇴신경 지배."},
+    {tag:"심화", term:"Piriformis", root:"pirum(라틴어)=배(과일) + forma=모양", def:"배 모양의 근육. 좌골신경이 이 근육 아래(또는 관통)로 지남 — 이상근증후군."},
+    {tag:"심화", term:"Perineal", root:"perinaeon(그리스어)=회음부", def:"회음부와 관련된. 음부신경이 지배."},
+    {tag:"심화", term:"Iliotibial", root:"ilium=엉덩뼈 + tibia=정강이뼈", def:"장골(엉덩뼈)에서 경골(정강이뼈)까지 이어지는 띠(IT band)."},
+    {tag:"심화", term:"Retinacular", root:"retinere(라틴어)=붙잡다", def:"힘줄을 붙잡아 고정하는 띠(지대, retinaculum)와 관련된. 발목의 신근/굴근 지대 등."},
   ],
   wordParts: {
     "Femoral": [{frag:"Femor", meaning:"넓적다리뼈"}, {frag:"al", meaning:"~의"}],
@@ -616,11 +692,18 @@ lumbosacral: {
     "대퇴신경":"Femoral", "폐쇄신경":"Obturator", "좌골신경":"Sciatic", "경골신경":"Tibial", "총비골신경":"Fibular(Peroneal)", "음부신경":"Pudendal"
   },
   cases: [
-    {title:"무릎 수술 후 힘이 빠짐", vignette:"슬관절 수술 후 대퇴사두근 힘이 빠지고 슬개골건 반사가 저하됨.", answer:"대퇴신경 손상", explain:"대퇴사두근을 지배하며 슬관절 신전을 담당."},
-    {title:"종아리 바깥쪽 압박 후 발등을 못 듦", vignette:"다리를 꼬고 오래 앉은 뒤 비골두 부위 압박, 발등을 들어올리지 못함(foot drop).", answer:"총비골신경 손상", explain:"비골두 주위를 표재적으로 지나 압박에 매우 취약."},
-    {title:"엉덩이 주사 후 다리 전체 약화", vignette:"둔부 주사 후 다리 전체 약화, 발등·발바닥 감각 저하.", answer:"좌골신경 손상", explain:"인체 최대 신경, 부적절한 주사 위치에서 손상 위험."},
-    {title:"외다리로 서면 반대쪽 골반이 처짐", vignette:"한쪽 다리로 서면 반대쪽 골반이 아래로 처지는 Trendelenburg 징후.", answer:"상둔신경 손상 (중둔근 약화)", explain:"중둔근이 지지측 골반을 수평으로 유지시키는 역할을 함."},
-    {title:"장시간 자전거 후 회음부 저림", vignette:"장거리 라이딩 후 회음부 저림과 감각 저하.", answer:"음부신경 압박", explain:"안장에 의한 만성 압박으로 발생하는 대표적 신경병증."}
+    {title:"무릎 수술 후 슬관절 신전 약화", vignette:"슬관절 수술 후 대퇴사두근 힘이 빠지고 슬개골건 반사(patellar reflex)가 저하됨.", answer:"대퇴신경 손상", explain:"L2-L4 기원. 대퇴사두근(슬관절 신전)과 슬개골건 반사를 담당. 골반 골절·서혜부 수술 시 위험."},
+    {title:"다리를 꼬다가 발이 처짐 (foot drop)", vignette:"다리를 꼬고 오래 앉은 뒤 비골두 부위 압박. 발등을 들어올리지 못하고(foot drop), 발등 및 하퇴 외측 감각 저하.", answer:"총비골신경(Common fibular nerve) 손상", explain:"비골두 주위를 표재적으로 지나 압박에 매우 취약. 전경골근 지배로 배측굴곡(dorsiflexion) 불능."},
+    {title:"엉덩이 주사 후 하지 전체 약화", vignette:"둔부 주사 후 다리 전체 약화, 발등·발바닥 감각 저하 및 아킬레스 반사 소실.", answer:"좌골신경(Sciatic nerve) 손상", explain:"인체 최대 신경. 둔부 외상·잘못된 주사로 손상. 경골신경+총비골신경 합쳐진 구조."},
+    {title:"외다리 서기에서 반대측 골반 처짐", vignette:"한쪽 다리로 서면 반대쪽 골반이 처지는 Trendelenburg 징후. 고관절 외전 약화.", answer:"상둔신경(Superior gluteal nerve) 손상", explain:"중둔근·소둔근 지배. 손상 측 골반이 체중 지지 시 반대쪽을 수평으로 유지하지 못함."},
+    {title:"장시간 자전거 후 회음부 저림", vignette:"장거리 라이딩 후 회음부 저림, 성기 감각 저하, 배뇨 불편감.", answer:"음부신경(Pudendal nerve) 압박", explain:"안장에 의한 만성 압박. 회음부 감각·항문괄약근·요도괄약근을 지배."},
+    {title:"이상근증후군 — 앉으면 엉덩이가 아프고 다리가 저림", vignette:"오래 앉으면 엉덩이 깊숙이 통증이 오고 다리까지 저림. SLR 음성, 이상근 스트레칭 시 증상 악화.", answer:"이상근증후군(Piriformis syndrome) — 좌골신경 압박", explain:"좌골신경이 이상근(piriformis) 아래 또는 관통해 지남. 이상근 비대·경련 시 압박. 디스크와 구별 필요."},
+    {title:"대퇴 내측 감각 저하 — 고관절 수술 후", vignette:"고관절 치환술 후 대퇴 내측 감각 저하, 대퇴 내전 약화.", answer:"폐쇄신경(Obturator nerve) 손상", explain:"L2-L4 기원. 폐쇄공을 통과하며 내전근군 지배. 고관절 수술·폐쇄 탈장 수술 시 위험."},
+    {title:"종아리 뒤쪽 힘이 빠지고 발바닥이 저림", vignette:"발꿈치로 걷기 어렵고(발바닥굴곡 약화), 발바닥 전체 감각 저하. 아킬레스 반사 소실.", answer:"경골신경(Tibial nerve) 손상", explain:"좌골신경의 내측 분지. 비복근·가자미근(발바닥굴곡) 및 발바닥 감각 담당."},
+    {title:"발목 염좌 후 발 안쪽 통증과 저림", vignette:"발목 내측 타박 후 발 안쪽(내측 복사 뒤쪽)에 Tinel 징후, 발가락 굴곡 약화.", answer:"족근관증후군(Tarsal tunnel syndrome) — 경골신경 압박", explain:"족근관(tarsal tunnel)에서 경골신경이 압박. 손목터널증후군의 하지판. 편평족·발목 부종 시 위험."},
+    {title:"대장암 수술 후 고관절 신전 약화", vignette:"골반 내 대장암 수술 후 계단을 오르기 어렵고(고관절 신전 약화), 대둔근 위축.", answer:"하둔신경(Inferior gluteal nerve) 손상", explain:"S1-S2 기원. 대둔근(고관절 신전·외회전) 지배. 골반 내 종양·수술 시 손상 가능."},
+    {title:"L4-L5 추간판 탈출 — 발등 감각 저하", vignette:"요추 4-5번 추간판 탈출. 발등 감각 저하, 발등굴곡 약화, 무릎 반사 정상·발목 반사 정상.", answer:"L5 신경근 압박", explain:"L5: 발등굴곡(전경골근)·발 내반 담당. 무릎·발목 반사 모두 정상인 게 L5 단독 병변의 특징."},
+    {title:"L5-S1 추간판 탈출 — 아킬레스 반사 소실", vignette:"요추 5번-천추 1번 추간판 탈출. 발바닥굴곡 약화, 아킬레스 반사(ankle reflex) 소실, 발 외측 감각 저하.", answer:"S1 신경근 압박", explain:"S1: 발바닥굴곡(비복근·가자미근) 담당. 아킬레스 반사 소실이 S1 손상의 핵심 표지."}
   ]
 },
 
@@ -628,31 +711,31 @@ lumbosacral: {
 cranial: {
   label: "두경부 · 뇌신경", sub: "12 Cranial Nerves",
   terms: [
-    {tag:"Root word", term:"Olfactory", root:"olfacere(라틴어)=냄새맡다", def:"CN1 후각신경 — 후각 상피에서 기원, 대뇌(전두엽)로 직접 연결."},
-    {tag:"Root word", term:"Optic", root:"opticos(그리스어)=시각의", def:"CN2 시신경 — 망막에서 기원, 엄밀히는 뇌의 일부(중추신경계 백질)."},
-    {tag:"Root word", term:"Trigeminal", root:"tri(3)+geminus(쌍둥이)", def:"CN5 삼차신경 — 안신경/상악신경/하악신경 3개 분지."},
-    {tag:"Root word", term:"Facial", root:"facies(라틴어)=얼굴", def:"CN7 안면신경 — 표정근 운동, 혀 앞 2/3 미각."},
-    {tag:"Root word", term:"Vestibulocochlear", root:"vestibulum(전정)+cochlea(달팽이관)", def:"CN8 — 평형(전정)과 청각(와우) 두 기능을 함께 담당."},
-    {tag:"Root word", term:"Glossopharyngeal", root:"glossa(혀)+pharynx(인두)", def:"CN9 설인신경 — 혀 뒤 1/3 미각·인두 감각."},
-    {tag:"Root word", term:"Vagus", root:"vagus(라틴어)=방랑하는", def:"CN10 미주신경 — 흉복부까지 광범위하게 분포하는 유일한 뇌신경."},
-    {tag:"Root word", term:"Hypoglossal", root:"hypo(아래)+glossa(혀)", def:"CN12 설하신경 — 혀 아래를 주행, 혀 근육 운동 담당."},
-    {tag:"Root word", term:"Trochlear", root:"trochlea(라틴어)=도르래", def:"CN4 활차신경 — 상사근 힘줄이 지나는 도르래 구조에서 이름 유래."},
-    {tag:"Root word", term:"Abducens", root:"abducere(라틴어)=밖으로 이끌다", def:"CN6 외전신경 — 외직근을 지배해 눈을 바깥쪽으로 돌림."},
-    {tag:"Root word", term:"Oculomotor", root:"oculus(라틴어)=눈 + motor=움직이는 것", def:"CN3 동안신경 — 안구 운동 대부분, 동공 수축, 안검 거상 담당."},
-    {tag:"Root word", term:"Accessory", root:"accessorius(라틴어)=도와주는,추가의", def:"CN11 부신경 — 흉쇄유돌근과 승모근을 지배하는 '추가된' 신경."},
-    {tag:"Root word", term:"Ophthalmic", root:"ophthalmos(그리스어)=눈", def:"눈과 관련된. 삼차신경의 첫째 분지(안신경)."},
-    {tag:"Root word", term:"Maxillary", root:"maxilla(라틴어)=위턱뼈", def:"위턱뼈와 관련된. 삼차신경의 둘째 분지(상악신경)."},
-    {tag:"Root word", term:"Mandibular", root:"mandibula(라틴어)=아래턱뼈", def:"아래턱뼈와 관련된. 삼차신경의 셋째 분지(하악신경) — 유일하게 운동섬유 포함."},
-    {tag:"Root word", term:"Buccal", root:"bucca(라틴어)=뺨", def:"뺨과 관련된. 안면신경의 buccal branch(협신경가지)."},
-    {tag:"Root word", term:"Palatine", root:"palatum(라틴어)=입천장", def:"입천장과 관련된."},
-    {tag:"Root word", term:"Pharyngeal", root:"pharynx(그리스어)=인두", def:"인두(목구멍)와 관련된. 설인신경·미주신경이 지배."},
-    {tag:"Root word", term:"Laryngeal", root:"larynx(그리스어)=후두", def:"후두(성대가 있는 부위)와 관련된. 미주신경의 recurrent laryngeal nerve(되돌이후두신경)."},
-    {tag:"Root word", term:"Parotid", root:"para(그리스어)=옆 + otos=귀", def:"귀밑샘(이하선). 안면신경이 이 샘 속을 지나가며 갈라짐."},
-    {tag:"Root word", term:"Temporal", root:"tempus(라틴어)=관자놀이", def:"관자놀이(측두부)와 관련된."},
-    {tag:"Root word", term:"Occipital", root:"occiput(라틴어)=뒤통수", def:"뒤통수(후두부)와 관련된."},
-    {tag:"Root word", term:"Zygomatic", root:"zygon(그리스어)=멍에", def:"광대뼈(관골)와 관련된. 안면신경의 zygomatic branch."},
-    {tag:"Root word", term:"Lacrimal", root:"lacrima(라틴어)=눈물", def:"눈물과 관련된. 안면신경이 눈물샘 분비를 지배."},
-    {tag:"Root word", term:"Sublingual", root:"sub(라틴어)=아래 + lingua=혀", def:"혀 아래의. Sublingual gland(혀밑샘) — 안면신경이 분비 지배."},
+    {tag:"핵심", term:"Olfactory", root:"olfacere(라틴어)=냄새맡다", def:"CN1 후각신경 — 후각 상피에서 기원, 대뇌(전두엽)로 직접 연결."},
+    {tag:"핵심", term:"Optic", root:"opticos(그리스어)=시각의", def:"CN2 시신경 — 망막에서 기원, 엄밀히는 뇌의 일부(중추신경계 백질)."},
+    {tag:"핵심", term:"Trigeminal", root:"tri(3)+geminus(쌍둥이)", def:"CN5 삼차신경 — 안신경/상악신경/하악신경 3개 분지."},
+    {tag:"핵심", term:"Facial", root:"facies(라틴어)=얼굴", def:"CN7 안면신경 — 표정근 운동, 혀 앞 2/3 미각."},
+    {tag:"핵심", term:"Vestibulocochlear", root:"vestibulum(전정)+cochlea(달팽이관)", def:"CN8 — 평형(전정)과 청각(와우) 두 기능을 함께 담당."},
+    {tag:"핵심", term:"Glossopharyngeal", root:"glossa(혀)+pharynx(인두)", def:"CN9 설인신경 — 혀 뒤 1/3 미각·인두 감각."},
+    {tag:"핵심", term:"Vagus", root:"vagus(라틴어)=방랑하는", def:"CN10 미주신경 — 흉복부까지 광범위하게 분포하는 유일한 뇌신경."},
+    {tag:"핵심", term:"Hypoglossal", root:"hypo(아래)+glossa(혀)", def:"CN12 설하신경 — 혀 아래를 주행, 혀 근육 운동 담당."},
+    {tag:"핵심", term:"Trochlear", root:"trochlea(라틴어)=도르래", def:"CN4 활차신경 — 상사근 힘줄이 지나는 도르래 구조에서 이름 유래."},
+    {tag:"핵심", term:"Abducens", root:"abducere(라틴어)=밖으로 이끌다", def:"CN6 외전신경 — 외직근을 지배해 눈을 바깥쪽으로 돌림."},
+    {tag:"심화", term:"Oculomotor", root:"oculus(라틴어)=눈 + motor=움직이는 것", def:"CN3 동안신경 — 안구 운동 대부분, 동공 수축, 안검 거상 담당."},
+    {tag:"심화", term:"Accessory", root:"accessorius(라틴어)=도와주는,추가의", def:"CN11 부신경 — 흉쇄유돌근과 승모근을 지배하는 '추가된' 신경."},
+    {tag:"심화", term:"Ophthalmic", root:"ophthalmos(그리스어)=눈", def:"눈과 관련된. 삼차신경의 첫째 분지(안신경)."},
+    {tag:"심화", term:"Maxillary", root:"maxilla(라틴어)=위턱뼈", def:"위턱뼈와 관련된. 삼차신경의 둘째 분지(상악신경)."},
+    {tag:"심화", term:"Mandibular", root:"mandibula(라틴어)=아래턱뼈", def:"아래턱뼈와 관련된. 삼차신경의 셋째 분지(하악신경) — 유일하게 운동섬유 포함."},
+    {tag:"심화", term:"Buccal", root:"bucca(라틴어)=뺨", def:"뺨과 관련된. 안면신경의 buccal branch(협신경가지)."},
+    {tag:"심화", term:"Palatine", root:"palatum(라틴어)=입천장", def:"입천장과 관련된."},
+    {tag:"심화", term:"Pharyngeal", root:"pharynx(그리스어)=인두", def:"인두(목구멍)와 관련된. 설인신경·미주신경이 지배."},
+    {tag:"심화", term:"Laryngeal", root:"larynx(그리스어)=후두", def:"후두(성대가 있는 부위)와 관련된. 미주신경의 recurrent laryngeal nerve(되돌이후두신경)."},
+    {tag:"심화", term:"Parotid", root:"para(그리스어)=옆 + otos=귀", def:"귀밑샘(이하선). 안면신경이 이 샘 속을 지나가며 갈라짐."},
+    {tag:"심화", term:"Temporal", root:"tempus(라틴어)=관자놀이", def:"관자놀이(측두부)와 관련된."},
+    {tag:"심화", term:"Occipital", root:"occiput(라틴어)=뒤통수", def:"뒤통수(후두부)와 관련된."},
+    {tag:"심화", term:"Zygomatic", root:"zygon(그리스어)=멍에", def:"광대뼈(관골)와 관련된. 안면신경의 zygomatic branch."},
+    {tag:"심화", term:"Lacrimal", root:"lacrima(라틴어)=눈물", def:"눈물과 관련된. 안면신경이 눈물샘 분비를 지배."},
+    {tag:"심화", term:"Sublingual", root:"sub(라틴어)=아래 + lingua=혀", def:"혀 아래의. Sublingual gland(혀밑샘) — 안면신경이 분비 지배."},
   ],
   wordParts: {
     "Olfactory": [{frag:"Olfact", meaning:"냄새맡다"}, {frag:"ory", meaning:"~하는"}],
@@ -729,11 +812,18 @@ cranial: {
     "CN9 설인":"Glossopharyngeal", "CN10 미주":"Vagus", "CN11 부신경":"Accessory", "CN12 설하":"Hypoglossal"
   },
   cases: [
-    {title:"한쪽 얼굴이 이마까지 처짐", vignette:"한쪽 얼굴 전체(이마 포함)가 처지고 눈을 감지 못함.", answer:"CN7 안면신경 마비 (말초성, Bell's palsy)", explain:"말초성은 이마까지 침범, 중추성은 이마 보존 — 상부 안면근이 양측 대뇌지배를 받기 때문."},
-    {title:"복시와 내사시", vignette:"사물이 둘로 보이고, 눈을 안쪽에서 바깥쪽으로 돌리지 못함.", answer:"CN6 외전신경 손상", explain:"외직근을 지배해 안구를 외전시키는 신경."},
-    {title:"혀를 내밀면 한쪽으로 치우침", vignette:"혀를 내밀게 하니 한쪽 방향으로 편위됨.", answer:"CN12 설하신경 손상", explain:"손상된 쪽 이설근이 약화되어 혀가 손상측으로 편위."},
-    {title:"고개 돌리기와 어깨 으쓱이 약함", vignette:"고개를 반대로 돌리거나 어깨를 으쓱하는 힘이 약함.", answer:"CN11 부신경 손상", explain:"흉쇄유돌근과 승모근을 지배."},
-    {title:"삼킴곤란과 목젖 편위", vignette:"음식을 삼키기 어렵고, '아' 소리를 낼 때 목젖이 한쪽으로 치우침.", answer:"CN10 미주신경 손상", explain:"인두·후두 근육을 지배 — 목젖은 정상측으로 편위됨."}
+    {title:"한쪽 얼굴이 이마까지 처짐 — Bell's palsy", vignette:"한쪽 얼굴 전체(이마 포함)가 처지고 눈을 감지 못하며 음식이 흘러내림. 이마 주름도 사라짐.", answer:"CN7 안면신경 말초성 마비 (Bell's palsy)", explain:"말초성은 이마까지 모두 침범. 중추성(뇌졸중)은 이마 보존 — 이마 근육이 양측 대뇌피질의 지배를 받기 때문. 이 구분이 응급 감별의 핵심."},
+    {title:"수평 복시와 내사시", vignette:"수평 방향 복시. 눈을 바깥쪽으로 돌리지 못하고(외전 불능), 안쪽으로 치우친 사시.", answer:"CN6 외전신경 손상", explain:"외직근만 지배하는 순수 운동신경. 뇌압 상승 시 가장 먼저 눌리는 신경(false localizing sign)."},
+    {title:"혀를 내밀면 한쪽으로 치우침", vignette:"'아' 소리 내게 하고 혀를 내밀게 하니 한쪽으로 편위됨. 혀 반쪽 위축도 관찰.", answer:"CN12 설하신경 손상", explain:"손상 측 이설근이 약화돼 반대쪽 이설근이 더 강하게 밀어 손상측으로 편위됨. 위축은 하운동신경원 병변의 증거."},
+    {title:"고개 돌리기와 어깨 으쓱이 약함", vignette:"경부 림프절 생검 후 오른쪽 고개 돌리기와 어깨 으쓱이 약해짐.", answer:"CN11 부신경 손상", explain:"흉쇄유돌근(반대측 고개 돌리기)과 승모근(어깨 으쓱) 지배. 경부 수술·림프절 생검 시 손상 위험."},
+    {title:"삼킴곤란과 목젖 편위", vignette:"뇌졸중 후 음식을 삼키기 어렵고, '아' 할 때 목젖이 정상측으로 치우침. 목쉰 목소리.", answer:"CN10 미주신경 손상", explain:"인두·후두 근육 및 구개 지배. 손상측 연구개가 처져 목젖이 건강한 쪽으로 당겨짐."},
+    {title:"계단 내려갈 때만 복시 발생", vignette:"계단을 내려갈 때 이미지가 겹쳐 보임(수직 복시). 머리를 반대쪽으로 기울이면 증상 호전.", answer:"CN4 활차신경 손상", explain:"상사근 지배 — 눈을 아래·내측으로 당김. 손상 시 계단 내려갈 때처럼 아래를 볼 때 복시. 두부외상에서 흔함."},
+    {title:"동공 산대 + 눈꺼풀 처짐 + 외하방 편위", vignette:"갑작스런 두통 후 한쪽 눈꺼풀이 처지고(ptosis), 동공이 산대되고, 눈이 아래 바깥쪽을 향함('down and out').", answer:"CN3 동안신경 압박 (후교통동맥 동맥류)", explain:"CN3가 후교통동맥 동맥류에 의해 외측에서 압박되면 부교감신경 섬유(동공수축)가 먼저 손상 → 동공 산대. 응급 CT 필요."},
+    {title:"안면 전기충격 통증 — 씹을 때 악화", vignette:"뺨과 아래턱 쪽 전기 오는 듯한 극심한 통증이 식사·대화·세안 시 반복 발작.", answer:"삼차신경통 (Trigeminal neuralgia, CN5)", explain:"CN5의 V2(상악신경)·V3(하악신경) 분포 영역. 혈관에 의한 신경 압박이 가장 흔한 원인."},
+    {title:"미각 소실 + 눈물·침 감소", vignette:"Bell's palsy 진단 후 혀 앞 2/3 미각 소실, 눈물·침 분비도 감소.", answer:"CN7 안면신경 — 고삭신경·대추체신경 침범", explain:"병변이 슬신경절 근위부면 운동 마비 외에 미각(고삭신경)·눈물(대추체신경)도 함께 손상."},
+    {title:"한쪽 난청 + 어지럼증", vignette:"40대 환자. 한쪽 귀에 이명·진행성 난청, 균형장애. MRI에서 내이도 종물 관찰.", answer:"청신경종 (CN8 전정와우신경 종양)", explain:"내이도에서 발생한 신경초종. 청각(와우신경)과 평형(전정신경) 모두 손상. CN7도 인접해 안면마비 동반 가능."},
+    {title:"구역반사 소실 + 삼킴장애", vignette:"뇌졸중 후 구역반사(gag reflex)가 소실되고 삼킴 장애가 생김. 혀 뒤쪽 감각 저하.", answer:"CN9 설인신경 손상", explain:"혀 뒤 1/3 감각·미각 및 구역반사의 구심성 경로. 연수 병변에서 CN9·CN10 함께 손상되는 경우 많음."},
+    {title:"냄새를 전혀 못 맡음 — 두부외상 후", vignette:"교통사고 후 냄새를 전혀 못 맡게 됨(anosmia). 시력·청각은 정상.", answer:"CN1 후각신경 손상", explain:"사판(cribriform plate)을 통과하는 후각신경이 두부 전면 충격 시 전단력으로 끊김. 후각 소실이 유일한 증상."}
   ]
 }
 };
@@ -933,11 +1023,19 @@ function renderOverview(){
 const BOX_INTERVAL_DAYS = [0, 1, 3, 7, 14, 30];
 const GRADUATE_STREAK = 2;
 let cardQueue = null;
+let termFilter = 'all'; // 'all' | '핵심' | '심화'
+
+function setTermFilter(f){
+  termFilter = f;
+  document.querySelectorAll('.term-filter-btn').forEach(b=>b.classList.toggle('active', b.dataset.filter===f));
+  refreshFlashcard();
+}
 let cardPos = 0;
 let flipped = false;
 
 function buildQueue(){
-  const terms = getTerms(state.currentSystem);
+  let terms = getTerms(state.currentSystem);
+  if(termFilter !== 'all') terms = terms.filter(t=>t.tag === termFilter);
   const now = Date.now();
   const items = terms.map(t=>{
     const rec = state.srs[t.id] || {box:0, due:new Date(0).toISOString(), streak:0};
@@ -956,10 +1054,18 @@ function refreshFlashcard(){
   renderCard();
 }
 function renderCard(){
-  if(!cardQueue || !cardQueue.length) return;
+  if(!cardQueue || !cardQueue.length){
+    document.getElementById('fc-tag').textContent = '카드 없음';
+    document.getElementById('fc-box').textContent = '';
+    document.getElementById('fc-term').textContent = '이 필터에 해당하는 카드가 없습니다';
+    document.getElementById('fc-root').textContent = '';
+    document.getElementById('fc-front').style.display = 'block';
+    document.getElementById('fc-back').style.display = 'none';
+    return;
+  }
   const q = cardQueue[cardPos % cardQueue.length];
   const t = q.term;
-  document.getElementById('fc-tag').textContent = `${t.tag} · ${cardPos%cardQueue.length+1}/${cardQueue.length}`;
+  document.getElementById('fc-tag').innerHTML = `<span class="tag-badge ${t.tag}">${t.tag}</span> · ${cardPos%cardQueue.length+1}/${cardQueue.length}`;
   document.getElementById('fc-box').textContent = `Box ${q.box}/5 · ${q.streak}/${GRADUATE_STREAK}`;
   document.getElementById('fc-term').textContent = t.term;
   document.getElementById('fc-root').textContent = t.root;
@@ -982,14 +1088,38 @@ function addCustomTerm(){
   const term = document.getElementById('term-term-input').value.trim();
   const root = document.getElementById('term-root-input').value.trim();
   const def = document.getElementById('term-def-input').value.trim();
+  const partsRaw = document.getElementById('term-parts-input').value.trim();
   if(!term || !def){ alert('용어와 설명은 꼭 입력해주세요.'); return; }
+
+  let parts = null;
+  if(partsRaw){
+    try{
+      parts = partsRaw.split(',').map(chunk=>{
+        const [frag, meaning] = chunk.trim().split('|').map(s=>s.trim());
+        if(!frag) throw new Error();
+        return { frag, meaning: meaning || '' };
+      });
+      const concat = parts.map(p=>p.frag).join('').toLowerCase();
+      if(concat !== term.toLowerCase()){
+        alert(`조각을 이어붙이면 "${parts.map(p=>p.frag).join('')}"이 되는데, 입력한 용어 "${term}"과 일치하지 않습니다. 다시 확인해주세요.`);
+        return;
+      }
+    }catch(e){ alert('조각 형식이 올바르지 않습니다. 예: Poplite|오금, al|~의'); return; }
+  }
+
   const bucket = ensureCustomBucket(state.currentSystem);
   const id = state.currentSystem+'::custom::'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
-  bucket.terms.push({ id, tag:'직접 추가', term, root: root || '(어원 미입력)', def, custom:true });
+  const entry = { id, tag:'직접 추가', term, root: root || '(어원 미입력)', def, custom:true };
+  if(parts){
+    if(!SYSTEMS[state.currentSystem].wordParts) SYSTEMS[state.currentSystem].wordParts = {};
+    SYSTEMS[state.currentSystem].wordParts[term] = parts;
+  }
+  bucket.terms.push(entry);
   saveState();
   document.getElementById('term-term-input').value = '';
   document.getElementById('term-root-input').value = '';
   document.getElementById('term-def-input').value = '';
+  document.getElementById('term-parts-input').value = '';
   refreshFlashcard();
   renderOverview();
 }
@@ -1270,24 +1400,44 @@ function drawConnectors(highlightId){
 window.addEventListener('resize', ()=>drawConnectors());
 
 /* ================= EXAM MODE (mixed, separate from SRS) ================= */
-const EXAM_LENGTH = 8;
 let examState = null; // null = not started; otherwise {questions, idx, score, answers}
 
+function calcExamLength(sysKey){
+  // Scale: 10 terms → 8 q / 25 terms → 15 q. Capped at 20.
+  const n = getTerms(sysKey).length;
+  return Math.min(Math.round(n * 0.6), 20);
+}
 function renderExamIntro(){
   const box = document.getElementById('exam-container');
-  const sysLabel = SYSTEMS[state.currentSystem].label;
+  const sysKey = state.currentSystem;
+  const sysLabel = SYSTEMS[sysKey].label;
+  const total = calcExamLength(sysKey);
+  const tCount = Math.ceil(total*0.6), cCount = Math.floor(total*0.4);
   box.innerHTML = `
     <div class="exam-intro">
-      <p><b>${sysLabel}</b> 계통에서 용어 ${Math.ceil(EXAM_LENGTH*0.6)}문항 + 임상 케이스 ${Math.floor(EXAM_LENGTH*0.4)}문항을 무작위로 섞어 총 ${EXAM_LENGTH}문항을 출제합니다.<br>임상 케이스는 자유 서술이라 스스로 채점합니다.</p>
+      <p><b>${sysLabel}</b> 계통 — 용어 <b>${tCount}</b>문항 + 임상 케이스 <b>${cCount}</b>문항, 총 <b>${total}</b>문항.</p>
+      <p style="margin-top:8px;">범위를 선택하세요.</p>
+      <div class="quiz-mode-row" style="margin-bottom:16px;">
+        <button class="quiz-mode-btn active" id="exam-scope-all" onclick="setExamScope('all')">전체 (핵심+심화)</button>
+        <button class="quiz-mode-btn" id="exam-scope-core" onclick="setExamScope('핵심')">핵심만</button>
+      </div>
       <button class="btn primary" onclick="startExam()">테스트 시작</button>
     </div>`;
 }
+let examScope = 'all';
+function setExamScope(s){
+  examScope = s;
+  document.getElementById('exam-scope-all').classList.toggle('active', s==='all');
+  document.getElementById('exam-scope-core').classList.toggle('active', s==='핵심');
+}
 function startExam(){
   const sysKey = state.currentSystem;
-  const terms = getTerms(sysKey).slice();
+  let terms = getTerms(sysKey).slice();
+  if(examScope !== 'all') terms = terms.filter(t=>t.tag===examScope);
   const cases = getCases(sysKey).slice();
-  const termCount = Math.min(Math.ceil(EXAM_LENGTH*0.6), terms.length);
-  const caseCount = Math.min(EXAM_LENGTH - termCount, cases.length);
+  const total = Math.min(calcExamLength(sysKey), terms.length + cases.length);
+  const termCount = Math.min(Math.ceil(total*0.6), terms.length);
+  const caseCount = Math.min(total - termCount, cases.length);
   const shuffledTerms = terms.sort(()=>Math.random()-0.5).slice(0, termCount).map(t=>({type:'term', data:t}));
   const shuffledCases = cases.sort(()=>Math.random()-0.5).slice(0, caseCount).map(c=>({type:'case', data:c}));
   const questions = shuffledTerms.concat(shuffledCases).sort(()=>Math.random()-0.5);
