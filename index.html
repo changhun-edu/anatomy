@@ -178,6 +178,30 @@
   .exam-summary .big-score{font-family:'Fraunces',serif; font-size:48px; color:var(--nerve); margin-bottom:8px;}
   .exam-breakdown{text-align:left; margin-top:20px; font-size:13px; color:var(--text-mid); line-height:1.8;}
 
+  /* ---------- Print config panel ---------- */
+  .print-config{background:var(--ink-card); border:1px solid var(--line); border-radius:8px; padding:28px; max-width:640px;}
+  .print-config h3{font-family:'Fraunces',serif; font-size:17px; margin-bottom:18px;}
+  .print-option-group{margin-bottom:20px;}
+  .print-option-label{font-size:12px; color:var(--text-dim); text-transform:uppercase; letter-spacing:.06em; margin-bottom:10px; display:block;}
+  .print-option-row{display:flex; flex-wrap:wrap; gap:8px;}
+  .print-pill{
+    background:var(--ink-soft); border:1px solid var(--line); color:var(--text-mid);
+    padding:8px 14px; border-radius:20px; font-size:13px; cursor:pointer;
+    font-family:'Inter',sans-serif; transition:.15s;
+  }
+  .print-pill:hover{border-color:var(--nerve-dim);}
+  .print-pill.active{background:var(--nerve); color:var(--ink); border-color:var(--nerve);}
+  .print-stepper{display:flex; align-items:center; gap:14px;}
+  .print-stepper-btn{
+    width:32px; height:32px; border:1px solid var(--line); background:var(--ink-soft);
+    color:var(--paper); border-radius:4px; font-size:18px; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; line-height:1;
+  }
+  .print-stepper-val{font-family:'Fraunces',serif; font-size:22px; min-width:28px; text-align:center;}
+  .print-stepper-label{font-size:12px; color:var(--text-dim);}
+  .print-action-row{display:flex; gap:12px; flex-wrap:wrap; margin-top:24px;}
+  .print-preview-note{font-size:12px; color:var(--text-dim); margin-top:12px; line-height:1.5;}
+
   /* ---------- Game mode selector ---------- */
   .game-mode-select{display:flex; gap:10px; margin-bottom:24px; flex-wrap:wrap;}
   .game-mode-pill{
@@ -371,6 +395,7 @@
     <button data-view="structure">구조 시각화</button>
     <button data-view="clinical">임상 시나리오</button>
     <button data-view="exam">종합 테스트</button>
+    <button data-view="print">🖨 시험지</button>
   </div>
 </nav>
 
@@ -540,6 +565,12 @@
     <h2 class="section-title">종합 테스트</h2>
     <p class="section-desc">용어와 임상 케이스를 섞어 무작위로 출제합니다. SRS 진행률에는 영향을 주지 않는 별도 평가 모드입니다.</p>
     <div id="exam-container"></div>
+  </section>
+
+  <section class="view" id="view-print">
+    <h2 class="section-title">🖨 시험지 생성</h2>
+    <p class="section-desc">설정을 고른 뒤 미리보기를 확인하고 인쇄하세요. 학생용(빈칸)과 교사용 정답지가 함께 생성됩니다.</p>
+    <div id="print-config-panel"></div>
   </section>
 </main>
 
@@ -947,7 +978,7 @@ function onSystemChange(){
 }
 
 /* ================= NAV / HISTORY ================= */
-const VALID_VIEWS = ['overview','terms','structure','clinical','exam','game'];
+const VALID_VIEWS = ['overview','terms','structure','clinical','exam','game','print'];
 
 function applyView(view){
   // Stop sprint timer when leaving the game tab
@@ -961,6 +992,7 @@ function applyView(view){
     if(currentGameMode === 'builder' && !gameState){ startGame(); }
     if(currentGameMode === 'sprint' && !sprintState){ renderSprintIntro(); }
   }
+  if(view === 'print'){ renderPrintConfig(); }
   window.scrollTo(0, 0);
 }
 function switchView(view, pushHistory){
@@ -2026,6 +2058,330 @@ function addCustomCase(){
   saveState();
   buildCases();
   renderOverview();
+}
+
+/* ================= PRINT / EXAM SHEET ================= */
+const printCfg = {
+  systems: ['brachial'],   // selected systems
+  termCount: 5,            // etymology questions
+  defCount: 5,             // definition→term questions
+  caseCount: 3,            // clinical case questions
+  filter: 'all',           // 'all' | '핵심' | '심화'
+  randomize: true
+};
+
+function renderPrintConfig(){
+  const box = document.getElementById('print-config-panel');
+  const sysKeys = Object.keys(SYSTEMS);
+  const sysButtons = sysKeys.map(k=>`
+    <button class="print-pill ${printCfg.systems.includes(k)?'active':''}"
+      onclick="togglePrintSystem('${k}')">${SYSTEMS[k].label}</button>`).join('');
+  const filterButtons = ['all','핵심','심화'].map(f=>`
+    <button class="print-pill ${printCfg.filter===f?'active':''}"
+      onclick="setPrintFilter('${f}')">${f==='all'?'전체':f}</button>`).join('');
+
+  box.innerHTML = `
+    <div class="print-config">
+      <h3>시험지 설정</h3>
+
+      <div class="print-option-group">
+        <span class="print-option-label">포함할 계통</span>
+        <div class="print-option-row">${sysButtons}</div>
+      </div>
+
+      <div class="print-option-group">
+        <span class="print-option-label">용어 범위</span>
+        <div class="print-option-row">${filterButtons}</div>
+      </div>
+
+      <div class="print-option-group">
+        <span class="print-option-label">파트별 문항 수</span>
+        <div style="display:flex; gap:32px; flex-wrap:wrap; margin-top:4px;">
+          <div>
+            <div class="print-stepper">
+              <button class="print-stepper-btn" onclick="adjPrint('termCount',-1)">−</button>
+              <span class="print-stepper-val" id="pc-term">${printCfg.termCount}</span>
+              <button class="print-stepper-btn" onclick="adjPrint('termCount',1)">+</button>
+            </div>
+            <div class="print-stepper-label" style="margin-top:4px;text-align:center;">어원 분해</div>
+          </div>
+          <div>
+            <div class="print-stepper">
+              <button class="print-stepper-btn" onclick="adjPrint('defCount',-1)">−</button>
+              <span class="print-stepper-val" id="pc-def">${printCfg.defCount}</span>
+              <button class="print-stepper-btn" onclick="adjPrint('defCount',1)">+</button>
+            </div>
+            <div class="print-stepper-label" style="margin-top:4px;text-align:center;">정의→용어</div>
+          </div>
+          <div>
+            <div class="print-stepper">
+              <button class="print-stepper-btn" onclick="adjPrint('caseCount',-1)">−</button>
+              <span class="print-stepper-val" id="pc-case">${printCfg.caseCount}</span>
+              <button class="print-stepper-btn" onclick="adjPrint('caseCount',1)">+</button>
+            </div>
+            <div class="print-stepper-label" style="margin-top:4px;text-align:center;">임상 케이스</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="print-action-row">
+        <button class="btn primary" onclick="openPrintWindow()">🖨 새 창에서 인쇄</button>
+      </div>
+      <p class="print-preview-note">
+        인쇄 창이 열리면 브라우저 인쇄(Ctrl+P / ⌘P)를 실행하세요.<br>
+        학생용(빈칸) → 페이지 넘기면 교사용 정답지가 이어집니다.
+      </p>
+    </div>`;
+}
+
+function togglePrintSystem(key){
+  const i = printCfg.systems.indexOf(key);
+  if(i >= 0 && printCfg.systems.length > 1) printCfg.systems.splice(i,1);
+  else if(i < 0) printCfg.systems.push(key);
+  renderPrintConfig();
+}
+function setPrintFilter(f){ printCfg.filter = f; renderPrintConfig(); }
+function adjPrint(field, delta){
+  printCfg[field] = Math.max(0, Math.min(printCfg[field]+delta, 15));
+  renderPrintConfig();
+}
+
+function pickRandom(arr, n){ return arr.slice().sort(()=>Math.random()-0.5).slice(0,n); }
+
+function buildExamData(){
+  // Collect questions across selected systems
+  const allTerms = [], allDefs = [], allCases = [];
+  printCfg.systems.forEach(sysKey=>{
+    const sys = SYSTEMS[sysKey];
+    let terms = getTerms(sysKey);
+    if(printCfg.filter !== 'all') terms = terms.filter(t=>t.tag===printCfg.filter);
+    // Only terms with wordParts can be etymology questions
+    const etymTerms = terms.filter(t=>sys.wordParts && sys.wordParts[t.term]);
+    etymTerms.forEach(t=>allTerms.push({...t, sysKey, wordParts: sys.wordParts[t.term]}));
+    terms.forEach(t=>allDefs.push({...t, sysKey}));
+    getCases(sysKey).forEach(c=>allCases.push({...c, sysKey}));
+  });
+  return {
+    etymTerms: pickRandom(allTerms, printCfg.termCount),
+    defTerms:  pickRandom(allDefs,  printCfg.defCount),
+    cases:     pickRandom(allCases, printCfg.caseCount)
+  };
+}
+
+function openPrintWindow(){
+  const data = buildExamData();
+  const date = new Date().toLocaleDateString('ko-KR');
+  const systemLabel = printCfg.systems.map(k=>SYSTEMS[k].label).join(' + ');
+  const totalQ = data.etymTerms.length + data.defTerms.length + data.cases.length;
+
+  /* ---- shared helpers ---- */
+  const answerLine = (lines=2)=>
+    `<div style="margin-top:4px;">${Array(lines).fill('<div class="ans-line"></div>').join('')}</div>`;
+
+  /* ---- Part 1: Etymology ---- */
+  const part1Student = data.etymTerms.map((t,i)=>{
+    const partsHtml = t.wordParts.map(p=>
+      `<span class="wp-frag">${p.frag}</span><span class="wp-blank">________________</span>`
+    ).join('<span class="wp-plus">+</span>');
+    return `
+      <div class="q-item">
+        <div class="q-num">${i+1}.</div>
+        <div class="q-body">
+          <div class="q-term-label">${t.term}</div>
+          <div class="wp-row">${partsHtml}</div>
+          <div class="q-sub">각 어근(조각)의 뜻을 빈칸에 쓰세요.</div>
+        </div>
+      </div>`;
+  }).join('');
+
+  const part1Answer = data.etymTerms.map((t,i)=>{
+    const partsHtml = t.wordParts.map(p=>
+      `<span class="wp-frag">${p.frag}</span><span class="wp-answer">${p.meaning}</span>`
+    ).join('<span class="wp-plus">+</span>');
+    return `
+      <div class="q-item">
+        <div class="q-num">${i+1}.</div>
+        <div class="q-body">
+          <div class="q-term-label">${t.term}</div>
+          <div class="wp-row">${partsHtml}</div>
+        </div>
+      </div>`;
+  }).join('');
+
+  /* ---- Part 2: Def → Term ---- */
+  const offset1 = data.etymTerms.length;
+  const part2Student = data.defTerms.map((t,i)=>`
+    <div class="q-item">
+      <div class="q-num">${offset1+i+1}.</div>
+      <div class="q-body">
+        <div class="q-def">${t.def}</div>
+        <div style="display:flex;gap:24px;margin-top:6px;">
+          <div style="flex:1"><div class="q-sub">용어</div>${answerLine(1)}</div>
+          <div style="flex:2"><div class="q-sub">어원(root)</div>${answerLine(1)}</div>
+        </div>
+      </div>
+    </div>`).join('');
+
+  const part2Answer = data.defTerms.map((t,i)=>`
+    <div class="q-item">
+      <div class="q-num">${offset1+i+1}.</div>
+      <div class="q-body">
+        <div class="q-def">${t.def}</div>
+        <div style="display:flex;gap:24px;margin-top:6px;">
+          <div style="flex:1"><div class="q-sub">용어</div><div class="ans-filled">${t.term}</div></div>
+          <div style="flex:2"><div class="q-sub">어원</div><div class="ans-filled">${t.root}</div></div>
+        </div>
+      </div>
+    </div>`).join('');
+
+  /* ---- Part 3: Clinical cases ---- */
+  const offset2 = offset1 + data.defTerms.length;
+  const part3Student = data.cases.map((c,i)=>`
+    <div class="q-item q-case">
+      <div class="q-num">${offset2+i+1}.</div>
+      <div class="q-body">
+        <div class="q-case-title">${c.title}</div>
+        <div class="q-vignette">${c.vignette}</div>
+        <table class="case-table">
+          <tr><td class="ct-label">① 예상 진단</td><td>${answerLine(2)}</td></tr>
+          <tr><td class="ct-label">② 손상 부위</td><td>${answerLine(2)}</td></tr>
+          <tr><td class="ct-label">③ 근거</td><td>${answerLine(3)}</td></tr>
+        </table>
+      </div>
+    </div>`).join('');
+
+  const part3Answer = data.cases.map((c,i)=>`
+    <div class="q-item q-case">
+      <div class="q-num">${offset2+i+1}.</div>
+      <div class="q-body">
+        <div class="q-case-title">${c.title}</div>
+        <div class="q-vignette">${c.vignette}</div>
+        <table class="case-table">
+          <tr><td class="ct-label">① 진단</td><td><div class="ans-filled">${c.answer}</div></td></tr>
+          <tr><td class="ct-label">② 해설</td><td><div class="ans-filled">${c.explain}</div></td></tr>
+        </table>
+      </div>
+    </div>`).join('');
+
+  /* ---- Shared CSS ---- */
+  const css = `
+    @page{size:A4; margin:20mm 18mm;}
+    *{box-sizing:border-box; margin:0; padding:0;}
+    body{font-family:'Malgun Gothic','Noto Sans KR','AppleGothic',sans-serif; font-size:11pt; color:#111; background:#fff; line-height:1.5;}
+    .sheet{max-width:180mm; margin:0 auto; padding:0;}
+    .page-break{page-break-before:always;}
+
+    /* Header */
+    .exam-header{border-bottom:2.5px solid #111; padding-bottom:8px; margin-bottom:18px;}
+    .exam-title{font-size:16pt; font-weight:700; margin-bottom:4px;}
+    .exam-meta{display:flex; gap:0; font-size:10pt; color:#333;}
+    .exam-meta-item{flex:1; border:1px solid #aaa; padding:4px 8px;}
+    .exam-meta-item:not(:last-child){border-right:none;}
+    .exam-meta-label{font-size:8.5pt; color:#666; display:block;}
+
+    /* Section header */
+    .section-head{background:#111; color:#fff; padding:5px 10px; margin:20px 0 12px; font-size:10.5pt; font-weight:700; border-radius:2px;}
+    .section-head.answer{background:#8B0000;}
+    .section-desc-print{font-size:9.5pt; color:#555; margin-bottom:10px; border-left:3px solid #ccc; padding-left:8px;}
+
+    /* Question items */
+    .q-item{display:flex; gap:10px; margin-bottom:18px; align-items:flex-start;}
+    .q-num{font-weight:700; font-size:11pt; min-width:22px; color:#333;}
+    .q-body{flex:1;}
+    .q-term-label{font-size:13pt; font-weight:700; margin-bottom:6px; letter-spacing:.02em;}
+    .q-def{font-size:10.5pt; color:#222; margin-bottom:4px; line-height:1.6;}
+    .q-sub{font-size:8.5pt; color:#666; margin-bottom:2px;}
+    .q-case{border:1px solid #ddd; border-radius:4px; padding:10px 12px; margin-bottom:14px; background:#fafafa;}
+    .q-case-title{font-weight:700; font-size:11pt; margin-bottom:4px;}
+    .q-vignette{font-size:10pt; color:#333; border-left:3px solid #bbb; padding-left:8px; margin-bottom:10px; line-height:1.6;}
+
+    /* Wordparts */
+    .wp-row{display:flex; flex-wrap:wrap; align-items:center; gap:6px; margin-bottom:4px;}
+    .wp-frag{background:#eee; border:1px solid #ccc; padding:3px 8px; border-radius:3px; font-size:11pt; font-weight:600;}
+    .wp-plus{color:#888; font-size:12pt; padding:0 2px;}
+    .wp-blank{display:inline-block; border-bottom:1.5px solid #333; min-width:90px; margin-left:4px; font-size:10pt; color:#666; padding-bottom:2px;}
+    .wp-answer{display:inline-block; border-bottom:1.5px solid #8B0000; min-width:90px; margin-left:4px; color:#8B0000; font-weight:600; font-size:10pt;}
+
+    /* Answer lines */
+    .ans-line{border-bottom:1px solid #999; margin:5px 0; height:22px;}
+    .ans-filled{color:#8B0000; font-weight:600; font-size:10.5pt; border-bottom:1.5px solid #8B0000; padding-bottom:1px; margin-top:4px; line-height:1.6;}
+
+    /* Case table */
+    .case-table{width:100%; border-collapse:collapse;}
+    .case-table tr{vertical-align:top;}
+    .ct-label{font-size:9.5pt; color:#555; white-space:nowrap; padding-right:10px; padding-top:6px; font-weight:600;}
+    .case-table td:last-child{width:100%;}
+
+    /* Footer */
+    .exam-footer{font-size:8.5pt; color:#999; text-align:center; border-top:1px solid #ddd; padding-top:8px; margin-top:24px;}
+
+    /* Print */
+    @media print{
+      body{-webkit-print-color-adjust:exact; print-color-adjust:exact;}
+      .no-print{display:none !important;}
+      .page-break{page-break-before:always;}
+    }`;
+
+  const makeHeader = (kind, qCount)=>`
+    <div class="exam-header">
+      <div class="exam-title">해부학 아틀라스 — ${kind === 'student' ? '시험지' : '정답지 (교사용)'}</div>
+      <div class="exam-meta">
+        <div class="exam-meta-item"><span class="exam-meta-label">계통</span>${systemLabel}</div>
+        <div class="exam-meta-item"><span class="exam-meta-label">범위</span>${printCfg.filter === 'all' ? '전체' : printCfg.filter} · ${qCount}문항</div>
+        <div class="exam-meta-item"><span class="exam-meta-label">날짜</span>${date}</div>
+        ${kind==='student' ? '<div class="exam-meta-item"><span class="exam-meta-label">이름</span>&nbsp;</div>' : '<div class="exam-meta-item"><span class="exam-meta-label">점수</span>/'+qCount+'</div>'}
+      </div>
+    </div>`;
+
+  const makeFooter = (kind)=>
+    `<div class="exam-footer">${kind==='student'?'빈칸을 채워보세요':'정답지 — 배포 금지'} · 해부학 아틀라스</div>`;
+
+  const studentHTML = `
+    ${makeHeader('student', totalQ)}
+    ${data.etymTerms.length ? `
+      <div class="section-head">Part 1 &nbsp;|&nbsp; 어원 분해 (Etymology)</div>
+      <div class="section-desc-print">각 용어를 어근 조각으로 나눴습니다. 조각 아래 빈칸에 뜻을 한글로 쓰세요.</div>
+      ${part1Student}` : ''}
+    ${data.defTerms.length ? `
+      <div class="section-head">Part 2 &nbsp;|&nbsp; 정의 → 용어 (Terminology)</div>
+      <div class="section-desc-print">아래 설명에 맞는 용어(영문)와 어원을 쓰세요.</div>
+      ${part2Student}` : ''}
+    ${data.cases.length ? `
+      <div class="section-head">Part 3 &nbsp;|&nbsp; 임상 시나리오 (Clinical Reasoning)</div>
+      <div class="section-desc-print">증상 설명을 읽고 진단, 손상 부위, 근거를 쓰세요.</div>
+      ${part3Student}` : ''}
+    ${makeFooter('student')}`;
+
+  const answerHTML = `
+    ${makeHeader('answer', totalQ)}
+    ${data.etymTerms.length ? `
+      <div class="section-head answer">Part 1 &nbsp;|&nbsp; 어원 분해 — 정답</div>
+      ${part1Answer}` : ''}
+    ${data.defTerms.length ? `
+      <div class="section-head answer">Part 2 &nbsp;|&nbsp; 정의 → 용어 — 정답</div>
+      ${part2Answer}` : ''}
+    ${data.cases.length ? `
+      <div class="section-head answer">Part 3 &nbsp;|&nbsp; 임상 시나리오 — 정답 및 해설</div>
+      ${part3Answer}` : ''}
+    ${makeFooter('answer')}`;
+
+  const fullHTML = `<!DOCTYPE html><html lang="ko"><head>
+    <meta charset="UTF-8">
+    <title>해부학 시험지 — ${systemLabel}</title>
+    <style>${css}</style>
+  </head><body>
+    <div class="sheet no-print" style="text-align:center;padding:16px 0 8px;font-size:13px;color:#666;">
+      ⬇ 인쇄하려면 <b>Ctrl+P</b> (Windows) 또는 <b>⌘+P</b> (Mac)를 누르세요.
+      &nbsp; 학생용 → 페이지 넘기면 교사용 정답지가 이어집니다.
+    </div>
+    <div class="sheet">${studentHTML}</div>
+    <div class="sheet page-break">${answerHTML}</div>
+  </body></html>`;
+
+  const w = window.open('', '_blank', 'width=900,height=750');
+  w.document.open();
+  w.document.write(fullHTML);
+  w.document.close();
 }
 
 /* ================= INIT ================= */
