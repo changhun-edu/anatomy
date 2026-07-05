@@ -1,0 +1,1574 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>해부학 아틀라스</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#14181C; --ink-soft:#1C2227; --ink-card:#20272D;
+    --paper:#EDEAE2; --text-dim:#8B9296; --text-mid:#B7BCBE;
+    --nerve:#E8C547; --nerve-dim:#7A6B2E;
+    --artery:#C1443C; --vein:#3E6E8E; --muscle:#B08256;
+    --line:#2B3339;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{-webkit-text-size-adjust:100%;}
+  html, body{overflow-x:hidden; max-width:100%;}
+  body{background:var(--ink); color:var(--paper); font-family:'Inter',sans-serif; min-height:100vh;}
+  .mono{font-family:'IBM Plex Mono',monospace;}
+  button, .node, .sys-pill, .case-head, .quiz-opt{ -webkit-tap-highlight-color:transparent; touch-action:manipulation; }
+
+  header{border-bottom:1px solid var(--line); padding:24px 40px 16px; display:flex; align-items:flex-start; justify-content:space-between; flex-wrap:wrap; gap:14px;}
+  header .eyebrow{font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--nerve); margin-bottom:6px; display:block;}
+  header h1{font-family:'Fraunces',serif; font-weight:600; font-size:26px; letter-spacing:-0.01em; transition:color .15s;}
+  header .sub{color:var(--text-dim); font-size:13px; margin-top:4px;}
+  .logo-home{cursor:pointer; border-radius:6px; padding:2px 6px; margin:-2px -6px; transition:background .15s;}
+  .logo-home:hover{background:var(--ink-soft);}
+  .logo-home:hover h1{color:var(--nerve);}
+  .logo-home:focus-visible{outline:2px solid var(--nerve); outline-offset:2px;}
+
+  .system-select{display:flex; gap:8px; flex-wrap:wrap;}
+  .sys-pill{
+    background:var(--ink-card); border:1px solid var(--line); color:var(--text-mid);
+    padding:10px 14px; min-height:40px; border-radius:20px; font-size:12.5px; cursor:pointer;
+    font-family:'Inter',sans-serif; font-weight:500; transition:.15s; white-space:nowrap;
+  }
+  .sys-pill:hover{border-color:var(--nerve-dim);}
+  .sys-pill.active{background:var(--nerve); color:var(--ink); border-color:var(--nerve);}
+
+  nav{display:flex; gap:2px; padding:0 40px; border-bottom:1px solid var(--line); background:var(--ink-soft); overflow-x:auto;}
+  nav button{background:none; border:none; color:var(--text-dim); font-family:'Inter',sans-serif; font-size:14px; font-weight:500; padding:14px 16px; min-height:46px; cursor:pointer; border-bottom:2px solid transparent; white-space:nowrap; transition:color .15s;}
+  nav button:hover{color:var(--paper);}
+  nav button.active{color:var(--nerve); border-bottom-color:var(--nerve);}
+
+  main{padding:36px 40px 80px; max-width:1180px; margin:0 auto;}
+  .view{display:none;}
+  .view.active{display:block; animation:fadeIn .25s ease;}
+  @keyframes fadeIn{from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:translateY(0);}}
+
+  h2.section-title{font-family:'Fraunces',serif; font-size:22px; font-weight:600; margin-bottom:6px;}
+  p.section-desc{color:var(--text-dim); font-size:14px; margin-bottom:28px; max-width:640px; line-height:1.6;}
+
+  .stat-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:16px; margin-bottom:36px;}
+  .stat-card{background:var(--ink-card); border:1px solid var(--line); border-radius:6px; padding:20px;}
+  .stat-card .num{font-family:'Fraunces',serif; font-size:32px; font-weight:600; color:var(--nerve);}
+  .stat-card .label{font-size:12px; color:var(--text-dim); margin-top:4px;}
+  .legend-row{display:flex; gap:24px; flex-wrap:wrap; margin-top:8px;}
+  .legend-item{display:flex; align-items:center; gap:8px; font-size:13px; color:var(--text-mid);}
+  .swatch{width:12px; height:12px; border-radius:2px; display:inline-block;}
+  .overview-panel{background:var(--ink-card); border:1px solid var(--line); border-radius:6px; padding:24px; line-height:1.7; font-size:14px; color:var(--text-mid);}
+  .overview-panel b{color:var(--paper);}
+  .progress-bar-track{background:var(--ink-soft); height:8px; border-radius:4px; overflow:hidden; margin-top:10px;}
+  .progress-bar-fill{background:var(--nerve); height:100%; transition:width .3s;}
+  .share-panel{margin-top:16px;}
+  .share-actions{display:flex; gap:10px; flex-wrap:wrap; margin-top:14px;}
+  .share-status{margin-top:10px; font-size:12.5px; color:var(--nerve); min-height:16px;}
+
+  .flash-wrap{display:flex; gap:28px; flex-wrap:wrap; align-items:flex-start;}
+  .flash-stage{flex:1 1 380px; min-width:320px;}
+  .srs-status{display:flex; gap:16px; margin-bottom:12px; font-size:12px; color:var(--text-dim);}
+  .srs-status b{color:var(--nerve);}
+  .flashcard{background:var(--ink-card); border:1px solid var(--line); border-radius:8px; min-height:220px; padding:28px; cursor:pointer; display:flex; flex-direction:column; justify-content:center; position:relative; transition:border-color .2s;}
+  .flashcard:hover{border-color:var(--nerve-dim);}
+  .flashcard .tag{position:absolute; top:16px; left:20px; font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--text-dim); letter-spacing:.08em; text-transform:uppercase;}
+  .flashcard .box-badge{position:absolute; top:16px; right:20px; font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--text-dim);}
+  .flashcard .term{font-family:'Fraunces',serif; font-size:26px; font-weight:600; margin-bottom:10px;}
+  .flashcard .root{color:var(--nerve); font-size:14px; font-family:'IBM Plex Mono',monospace;}
+  .flashcard .def{color:var(--text-mid); font-size:14px; line-height:1.6; margin-top:14px;}
+  .flashcard .hint{position:absolute; bottom:14px; right:18px; font-size:11px; color:var(--text-dim);}
+  .flash-controls{display:flex; gap:10px; margin-top:16px;}
+  .btn{background:none; border:1px solid var(--line); color:var(--paper); padding:11px 16px; min-height:44px; border-radius:5px; font-size:13px; cursor:pointer; font-family:'Inter',sans-serif; font-weight:500; transition:.15s; flex:1;}
+  .btn:hover{border-color:var(--nerve); color:var(--nerve);}
+  .btn.primary{background:var(--nerve); color:var(--ink); border-color:var(--nerve);}
+  .btn.primary:hover{opacity:.85; color:var(--ink);}
+  .btn.again{border-color:var(--artery); color:var(--artery);}
+  .btn.again:hover{opacity:.85;}
+
+  .quiz-panel{flex:1 1 300px; min-width:280px; background:var(--ink-card); border:1px solid var(--line); border-radius:8px; padding:22px;}
+  .quiz-panel h3{font-family:'Fraunces',serif; font-size:16px; margin-bottom:6px;}
+  .quiz-panel .q-desc{color:var(--text-dim); font-size:12px; margin-bottom:16px;}
+  .quiz-q{font-size:14px; margin-bottom:14px; line-height:1.6;}
+  .quiz-opts{display:flex; flex-direction:column; gap:8px;}
+  .quiz-opt{text-align:left; background:var(--ink-soft); border:1px solid var(--line); color:var(--text-mid); padding:12px 14px; min-height:44px; border-radius:5px; font-size:13px; cursor:pointer; font-family:'Inter',sans-serif;}
+  .quiz-opt:hover{border-color:var(--text-dim);}
+  .quiz-opt.correct{border-color:var(--nerve); color:var(--nerve); background:rgba(232,197,71,.08);}
+  .quiz-opt.wrong{border-color:var(--artery); color:var(--artery); background:rgba(193,68,60,.08);}
+  .quiz-score{margin-top:14px; font-size:12px; color:var(--text-dim);}
+  .quiz-mode-row{display:flex; gap:6px; margin-bottom:14px;}
+  .quiz-mode-btn{flex:1; background:var(--ink-soft); border:1px solid var(--line); color:var(--text-dim); padding:8px 6px; border-radius:5px; font-size:12px; cursor:pointer; font-family:'Inter',sans-serif;}
+  .quiz-mode-btn.active{border-color:var(--nerve); color:var(--nerve); background:rgba(232,197,71,.08);}
+  .recall-input{width:100%; background:var(--ink-soft); border:1px solid var(--line); color:var(--paper); padding:10px 12px; border-radius:5px; font-size:13px; font-family:'Inter',sans-serif;}
+  .recall-input:focus{outline:none; border-color:var(--nerve);}
+  .recall-feedback{margin-top:10px; font-size:13px; min-height:18px;}
+
+  .diagram-wrap{display:flex; gap:28px; flex-wrap:wrap;}
+  .ref-image-card{background:var(--ink-card); border:1px solid var(--line); border-radius:8px; padding:18px; margin-bottom:24px; display:none;}
+  .ref-image-card.visible{display:block;}
+  .ref-image-card img{max-width:100%; max-height:420px; display:block; margin:0 auto; border-radius:4px; background:#fff;}
+  .ref-image-card .ref-caption{font-size:13px; color:var(--text-mid); margin-top:12px; text-align:center;}
+  .ref-image-card .ref-credit{font-size:11px; color:var(--text-dim); margin-top:4px; text-align:center;}
+  .diagram-columns{flex:1 1 600px; position:relative;}
+  #connector-svg{position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none;}
+  .columns-row{display:flex; gap:18px; position:relative; z-index:1;}
+  .plexus-col{flex:1; display:flex; flex-direction:column; gap:10px;}
+  .col-label{font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--text-dim); text-transform:uppercase; letter-spacing:.1em; text-align:center; margin-bottom:2px;}
+  .node{background:var(--ink-card); border:1px solid var(--line); border-radius:5px; padding:9px 8px; text-align:center; font-size:12px; cursor:pointer; color:var(--text-mid); transition:.15s; font-family:'IBM Plex Mono',monospace;}
+  .node:hover{border-color:var(--nerve-dim);}
+  .node.selected{border-color:var(--nerve); color:var(--nerve); background:rgba(232,197,71,.08);}
+  .detail-panel{flex:1 1 300px; min-width:280px; background:var(--ink-card); border:1px solid var(--line); border-radius:8px; padding:22px; min-height:200px;}
+  .detail-panel h3{font-family:'Fraunces',serif; font-size:19px; margin-bottom:4px;}
+  .detail-panel .detail-sub{color:var(--nerve); font-size:12px; font-family:'IBM Plex Mono',monospace; margin-bottom:14px;}
+  .detail-row{margin-bottom:10px; font-size:13px; line-height:1.6;}
+  .detail-row .k{color:var(--text-dim); font-size:11px; text-transform:uppercase; letter-spacing:.06em; display:block; margin-bottom:2px;}
+  .detail-row .v{color:var(--text-mid);}
+  .empty-hint{color:var(--text-dim); font-size:13px; line-height:1.6;}
+  .node-links{display:flex; flex-direction:column; gap:8px; margin-top:16px; padding-top:14px; border-top:1px dashed var(--line);}
+  .node-link-btn{text-align:left; flex:none; font-size:12.5px;}
+
+  .case-list{display:flex; flex-direction:column; gap:12px;}
+  .case-card{background:var(--ink-card); border:1px solid var(--line); border-radius:7px; padding:20px 22px;}
+  .case-head{display:flex; justify-content:space-between; align-items:center; cursor:pointer; gap:12px;}
+  .case-title{font-family:'Fraunces',serif; font-size:17px;}
+  .case-vignette{color:var(--text-mid); font-size:13.5px; line-height:1.7; margin-top:8px;}
+  .case-toggle{color:var(--text-dim); font-size:12px; font-family:'IBM Plex Mono',monospace;}
+  .case-answer{display:none; margin-top:14px; padding-top:14px; border-top:1px dashed var(--line); font-size:13.5px; line-height:1.7; color:var(--paper);}
+  .case-answer .a-k{color:var(--nerve); font-size:11px; text-transform:uppercase; letter-spacing:.08em; display:block; margin-bottom:4px; margin-top:10px;}
+  .case-card.open .case-answer{display:block;}
+  .exam-intro{background:var(--ink-card); border:1px solid var(--line); border-radius:8px; padding:28px; text-align:center;}
+  .exam-intro p{color:var(--text-mid); font-size:14px; margin-bottom:18px; line-height:1.6;}
+  .exam-progress{font-size:12px; color:var(--text-dim); margin-bottom:14px;}
+  .exam-card{background:var(--ink-card); border:1px solid var(--line); border-radius:8px; padding:26px;}
+  .exam-q-type{font-family:'IBM Plex Mono',monospace; font-size:10.5px; color:var(--nerve); text-transform:uppercase; letter-spacing:.08em; margin-bottom:10px;}
+  .exam-q-text{font-size:16px; line-height:1.6; margin-bottom:18px;}
+  .exam-self-grade{display:none; gap:10px; margin-top:16px;}
+  .exam-self-grade.visible{display:flex;}
+  .exam-result{margin-top:16px; font-size:14px; line-height:1.6;}
+  .exam-summary{text-align:center; padding:20px 0;}
+  .exam-summary .big-score{font-family:'Fraunces',serif; font-size:48px; color:var(--nerve); margin-bottom:8px;}
+  .exam-breakdown{text-align:left; margin-top:20px; font-size:13px; color:var(--text-mid); line-height:1.8;}
+
+  /* ---------- Root Builder game ---------- */
+  .game-hud{display:flex; gap:24px; margin-bottom:18px; flex-wrap:wrap;}
+  .game-hud-item{background:var(--ink-card); border:1px solid var(--line); border-radius:6px; padding:12px 18px; text-align:center;}
+  .game-hud-item .ghi-num{font-family:'Fraunces',serif; font-size:24px; color:var(--nerve);}
+  .game-hud-item .ghi-label{font-size:10.5px; color:var(--text-dim); text-transform:uppercase; letter-spacing:.06em; margin-top:2px;}
+  .game-card{background:var(--ink-card); border:1px solid var(--line); border-radius:8px; padding:28px;}
+  .game-clue{font-size:15px; line-height:1.6; margin-bottom:22px; color:var(--paper);}
+  .game-clue b{color:var(--nerve);}
+  .build-area{
+    min-height:56px; border:2px dashed var(--line); border-radius:7px; padding:10px;
+    display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-bottom:20px; transition:border-color .15s;
+  }
+  .build-area.shake{border-color:var(--artery); animation:shakeAnim .3s;}
+  .build-area.win{border-color:var(--nerve);}
+  @keyframes shakeAnim{0%,100%{transform:translateX(0);} 25%{transform:translateX(-6px);} 75%{transform:translateX(6px);}}
+  .build-slot{
+    background:var(--ink-soft); border:1px solid var(--nerve-dim); color:var(--nerve);
+    padding:8px 14px; border-radius:5px; font-family:'IBM Plex Mono',monospace; font-size:14px;
+    cursor:pointer;
+  }
+  .build-placeholder{color:var(--text-dim); font-size:13px; padding:8px 4px;}
+  .tile-pool{display:flex; flex-wrap:wrap; gap:10px; margin-bottom:20px;}
+  .tile{
+    background:var(--ink-soft); border:1px solid var(--line); color:var(--paper);
+    padding:10px 16px; border-radius:6px; font-family:'IBM Plex Mono',monospace; font-size:14px;
+    cursor:pointer; transition:.15s;
+  }
+  .tile:hover{border-color:var(--nerve); color:var(--nerve);}
+  .tile.used{opacity:0.25; pointer-events:none;}
+  .game-controls{display:flex; gap:10px; margin-bottom:16px;}
+  .game-feedback{font-size:14px; line-height:1.7; min-height:20px;}
+  .game-feedback.correct{color:var(--nerve);}
+  .game-feedback.wrong{color:var(--artery);}
+  .game-meaning-list{margin-top:12px; font-size:13px; color:var(--text-mid); display:flex; flex-direction:column; gap:4px;}
+  .case-self-check{display:none; margin-top:12px;}
+  .case-card.open .case-self-check{display:block;}
+  .self-check-label{display:block; font-size:11.5px; color:var(--text-dim); margin-bottom:6px; line-height:1.5;}
+  .self-check-input{width:100%; min-height:56px; background:var(--ink-soft); border:1px solid var(--line); color:var(--paper); padding:10px 12px; border-radius:5px; font-size:13px; font-family:'Inter',sans-serif; resize:vertical;}
+  .self-check-input:focus{outline:none; border-color:var(--nerve);}
+
+  .add-content-card{margin-top:6px;}
+  .add-toggle-btn{width:100%; border-style:dashed;}
+  .add-form{display:none; flex-direction:column; gap:8px; margin-top:12px; background:var(--ink-card); border:1px solid var(--line); border-radius:7px; padding:16px;}
+  .add-form.open{display:flex;}
+  .add-form input, .add-form textarea{
+    background:var(--ink-soft); border:1px solid var(--line); color:var(--paper);
+    padding:9px 12px; border-radius:5px; font-size:13px; font-family:'Inter',sans-serif; width:100%;
+  }
+  .add-form textarea{min-height:56px; resize:vertical;}
+  .add-form input:focus, .add-form textarea:focus{outline:none; border-color:var(--nerve);}
+  .add-form .btn, .add-content-card .btn{flex:none;}
+
+  footer{padding:24px 40px; color:var(--text-dim); font-size:12px; border-top:1px solid var(--line); text-align:center;}
+
+  /* ---------- Disclaimer / verification ---------- */
+  .disclaimer-bar{
+    background:#2A2013; border-bottom:1px solid var(--nerve-dim);
+    padding:10px 40px; display:flex; align-items:center; gap:16px; flex-wrap:wrap;
+    font-size:12.5px; color:#E8D9A8;
+  }
+  .disclaimer-text{flex:1; min-width:200px; line-height:1.5;}
+  .disclaimer-text b{color:var(--nerve);}
+  .admin-toggle{display:flex; align-items:center; gap:6px; font-size:12px; color:var(--text-mid); cursor:pointer; white-space:nowrap;}
+  .disclaimer-close{background:none; border:none; color:#E8D9A8; font-size:14px; cursor:pointer; padding:4px 8px;}
+  .disclaimer-bar.hidden{display:none;}
+
+  .verify-badge{
+    display:inline-flex; align-items:center; gap:5px; font-size:10.5px; font-family:'IBM Plex Mono',monospace;
+    padding:3px 8px; border-radius:20px; margin-left:8px; white-space:nowrap; vertical-align:middle;
+  }
+  .verify-badge.unverified{background:rgba(193,68,60,.12); color:var(--artery); border:1px solid rgba(193,68,60,.3);}
+  .verify-badge.verified{background:rgba(232,197,71,.12); color:var(--nerve); border:1px solid rgba(232,197,71,.3);}
+  .verify-badge.custom{background:rgba(62,110,142,.15); color:var(--vein); border:1px solid rgba(62,110,142,.3);}
+  .verify-checkbox-row{display:none; align-items:center; gap:6px; margin-top:8px; font-size:12px; color:var(--text-dim);}
+  body.admin-mode .verify-checkbox-row{display:flex;}
+
+  /* ---------- Mobile / small viewport optimizations ---------- */
+  @media (max-width: 720px){
+    header{padding:18px 18px 14px; flex-direction:column; align-items:stretch;}
+    header h1{font-size:21px;}
+    header .sub{font-size:12px;}
+    .system-select{gap:6px; overflow-x:auto; flex-wrap:nowrap; padding-bottom:4px; -webkit-overflow-scrolling:touch;}
+    .sys-pill{flex:0 0 auto;}
+
+    nav{padding:0 18px;}
+    nav button{padding:13px 12px; font-size:13px;}
+
+    main{padding:22px 18px 60px;}
+    h2.section-title{font-size:19px;}
+    p.section-desc{font-size:13px; margin-bottom:20px;}
+
+    .stat-grid{grid-template-columns:repeat(2,1fr); gap:10px; margin-bottom:24px;}
+    .stat-card{padding:14px;}
+    .stat-card .num{font-size:24px;}
+
+    .flash-wrap{gap:16px;}
+    .flash-stage{flex:1 1 100%; min-width:0;}
+    .quiz-panel{flex:1 1 100%; min-width:0; padding:18px;}
+    .flashcard{padding:22px; min-height:180px;}
+    .flashcard .term{font-size:21px;}
+    .flashcard .tag, .flashcard .box-badge{font-size:9px;}
+    .flash-controls{gap:8px;}
+    .btn{padding:12px 10px; font-size:12.5px;}
+
+    .diagram-wrap{gap:16px;}
+    .ref-image-card{padding:12px; margin-bottom:16px;}
+    .ref-image-card img{max-height:260px;}
+    .diagram-columns{flex:1 1 100%; min-width:0;}
+    .detail-panel{flex:1 1 100%; min-width:0; padding:18px;}
+    .columns-row{gap:6px;}
+    .plexus-col{gap:6px;}
+    .col-label{font-size:8.5px; letter-spacing:.04em;}
+    .node{padding:8px 4px; font-size:10.5px; line-height:1.3; word-break:keep-all;}
+
+    .case-card{padding:16px 16px;}
+    .exam-card{padding:18px;}
+    .exam-summary .big-score{font-size:36px;}
+    .game-card{padding:18px;}
+    .game-hud{gap:12px;}
+    .game-hud-item{padding:10px 14px;}
+    .tile{padding:9px 12px; font-size:13px;}    .case-title{font-size:15px;}
+    .case-vignette{font-size:13px;}
+
+    footer{padding:20px 18px; font-size:11px;}
+    .disclaimer-bar{padding:10px 18px; font-size:11.5px;}
+  }
+
+  @media (max-width: 380px){
+    .stat-grid{grid-template-columns:1fr 1fr;}
+    header h1{font-size:19px;}
+    .node{font-size:9.5px;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-home" id="logo-home" role="button" tabindex="0" aria-label="홈으로 이동">
+    <span class="eyebrow">Anatomy Atlas</span>
+    <h1>해부학 아틀라스</h1>
+    <div class="sub" id="header-sub">계통을 선택해 학습을 시작하세요</div>
+  </div>
+  <div class="system-select" id="system-select"></div>
+</header>
+
+<nav>
+  <button class="active" data-view="overview">개요</button>
+  <button data-view="terms">용어 암기</button>
+  <button data-view="game">🧩 어근 빌더</button>
+  <button data-view="structure">구조 시각화</button>
+  <button data-view="clinical">임상 시나리오</button>
+  <button data-view="exam">종합 테스트</button>
+</nav>
+
+<div class="disclaimer-bar" id="disclaimer-bar">
+  <span class="disclaimer-text">⚠ 이 안의 의학 정보는 아직 <b>전문가 검수 전</b>입니다. 실제 시험 준비에 쓰기 전 지도교수·조교의 확인을 받으세요.</span>
+  <label class="admin-toggle"><input type="checkbox" id="admin-mode-toggle"> 검수 모드</label>
+  <button class="disclaimer-close" id="disclaimer-close" aria-label="배너 닫기">✕</button>
+</div>
+
+<main>
+  <section class="view active" id="view-overview">
+    <h2 class="section-title">이 아틀라스가 하는 일</h2>
+    <p class="section-desc">계통별로 용어 암기 → 구조 파악 → 임상 연계까지 하나의 흐름으로 학습합니다. 카드 암기는 간격반복(SRS) 방식이라 자주 틀리는 카드가 더 자주 등장합니다.</p>
+    <div class="stat-grid" id="stat-grid"></div>
+    <div class="overview-panel">
+      <p><b>해부학적 색 코딩(Netter 관례)</b>을 그대로 사용합니다 — 신경은 노란색, 동맥은 빨간색, 정맥은 파란색, 근육은 갈색 계열로 표시합니다.</p>
+      <div class="legend-row">
+        <div class="legend-item"><span class="swatch" style="background:var(--nerve)"></span>신경 (Nerve)</div>
+        <div class="legend-item"><span class="swatch" style="background:var(--artery)"></span>동맥 (Artery)</div>
+        <div class="legend-item"><span class="swatch" style="background:var(--vein)"></span>정맥 (Vein)</div>
+        <div class="legend-item"><span class="swatch" style="background:var(--muscle)"></span>근육 (Muscle)</div>
+      </div>
+      <p style="margin-top:16px;"><b>전체 진행률 (마스터한 카드 비율)</b></p>
+      <div class="progress-bar-track"><div class="progress-bar-fill" id="progress-fill" style="width:0%"></div></div>
+    </div>
+
+    <div class="overview-panel share-panel">
+      <p><b>콘텐츠 공유</b> — 직접 추가한 카드/시나리오는 이 브라우저에만 저장됩니다. 파일로 내보내서 학생들에게 나눠주면, 학생들은 "가져오기"로 같은 카드를 받아볼 수 있습니다. (자동 동기화는 아니고, 파일 전달 방식입니다.)</p>
+      <div class="share-actions">
+        <button class="btn" onclick="exportContent()">⬇ 내보내기 (JSON 다운로드)</button>
+        <button class="btn" onclick="document.getElementById('import-file-input').click()">⬆ 가져오기 (파일 선택)</button>
+        <input type="file" id="import-file-input" accept="application/json" style="display:none" onchange="importContent(event)">
+      </div>
+      <div class="share-status" id="share-status"></div>
+    </div>
+  </section>
+
+
+  <section class="view" id="view-terms">
+    <h2 class="section-title">용어 암기 (간격반복)</h2>
+    <p class="section-desc">"기억났어요"를 누르면 다음 복습일이 늦춰지고, "다시 볼게요"를 누르면 곧 다시 나옵니다.</p>
+    <div class="flash-wrap">
+      <div class="flash-stage">
+        <div class="srs-status" id="srs-status"></div>
+        <div class="flashcard" id="flashcard" onclick="flipCard()">
+          <span class="tag" id="fc-tag">Term</span>
+          <span class="box-badge" id="fc-box"></span>
+          <div id="fc-front">
+            <div class="term" id="fc-term"></div>
+            <div class="root" id="fc-root"></div>
+          </div>
+          <div id="fc-back" style="display:none;">
+            <div class="def" id="fc-def"></div>
+          </div>
+          <span class="hint">클릭하여 뒤집기</span>
+        </div>
+        <div class="flash-controls">
+          <button class="btn again" onclick="rateCard(event,'again')">다시 볼게요</button>
+          <button class="btn primary" onclick="rateCard(event,'know')">기억났어요 →</button>
+        </div>
+        <div class="add-content-card">
+          <button class="btn add-toggle-btn" onclick="toggleTermForm()">+ 카드 직접 추가하기</button>
+          <div class="add-form" id="term-add-form">
+            <input type="text" id="term-term-input" placeholder="용어 (예: Popliteal)">
+            <input type="text" id="term-root-input" placeholder="어원/root (예: poples(라틴어)=오금)">
+            <textarea id="term-def-input" placeholder="설명/정의"></textarea>
+            <button class="btn primary" onclick="addCustomTerm()">추가</button>
+          </div>
+        </div>
+      </div>
+      <div class="quiz-panel">
+        <h3>빠른 퀴즈</h3>
+        <div class="q-desc">재인(다지선다)만으로는 실제 시험 인출 능력이 잘 안 늘어요 — 주관식으로 직접 떠올려보세요</div>
+        <div class="quiz-mode-row">
+          <button class="quiz-mode-btn active" data-mode="mc" onclick="setQuizMode('mc')">객관식</button>
+          <button class="quiz-mode-btn" data-mode="recall" onclick="setQuizMode('recall')">주관식(회상)</button>
+        </div>
+        <div class="quiz-q" id="quiz-q"></div>
+        <div class="quiz-opts" id="quiz-opts"></div>
+        <div class="quiz-score" id="quiz-score">맞은 개수: 0 / 0</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="view" id="view-game">
+    <h2 class="section-title">🧩 어근 빌더</h2>
+    <p class="section-desc">조각을 순서대로 클릭해서 실제 용어를 조립하세요. 정답 개수가 늘어날수록 헷갈리는 조각(오답 타일)이 많아집니다.</p>
+    <div id="game-container"></div>
+  </section>
+
+  <section class="view" id="view-structure">
+    <h2 class="section-title" id="structure-title">구조 시각화</h2>
+    <p class="section-desc">각 단계를 클릭하면 기시, 지배 영역, 손상 시 증상이 오른쪽에 표시됩니다. 도식은 이해를 돕는 단순화된 그림이라, 아래 실제 도판과 함께 보세요.</p>
+    <div class="ref-image-card" id="ref-image-card"></div>
+    <div class="diagram-wrap">
+      <div class="diagram-columns">
+        <svg id="connector-svg"></svg>
+        <div class="columns-row" id="columns-row"></div>
+      </div>
+      <div class="detail-panel" id="detail-panel"><p class="empty-hint">왼쪽에서 구조를 클릭해 보세요.</p></div>
+    </div>
+  </section>
+
+  <section class="view" id="view-clinical">
+    <h2 class="section-title">임상 시나리오</h2>
+    <p class="section-desc">증상을 먼저 읽고 손상 부위를 추론해 보세요. 클릭하면 정답과 해설이 열립니다.</p>
+    <div class="case-list" id="case-list"></div>
+  </section>
+
+  <section class="view" id="view-exam">
+    <h2 class="section-title">종합 테스트</h2>
+    <p class="section-desc">용어와 임상 케이스를 섞어 무작위로 출제합니다. SRS 진행률에는 영향을 주지 않는 별도 평가 모드입니다.</p>
+    <div id="exam-container"></div>
+  </section>
+</main>
+
+<footer>해부학 아틀라스 프로토타입 · 학습 참고용이며 임상 진단 목적이 아닙니다 · 진행 상황은 이 브라우저에 저장됩니다</footer>
+
+<script>
+/* ================= SYSTEM DATA ================= */
+const SYSTEMS = {
+
+/* ---------- 상지: 상완신경총 ---------- */
+brachial: {
+  label: "상지 · 상완신경총", sub: "Brachial Plexus · C5–T1",
+  terms: [
+    {tag:"Root word", term:"Brachial", root:"brachium(라틴어)=팔", def:"팔과 관련된 구조. 예: brachial plexus(상완신경총), brachialis(상완근)"},
+    {tag:"Root word", term:"Plexus", root:"plexus(라틴어)=짜임,그물망", def:"여러 신경 가지가 얽혀 재배열되는 구조. 상완신경총, 요천추신경총 등."},
+    {tag:"Root word", term:"Musculocutaneous", root:"musculo(근육)+cutaneous(피부)", def:"근육·피부 모두 지배. 이두근(운동)과 전완 외측 피부(감각)를 지배."},
+    {tag:"Root word", term:"-plegia/-paresis", root:"그리스어 plege(타격)/paresis(이완)", def:"-plegia=완전마비, -paresis=불완전마비."},
+    {tag:"Root word", term:"Radial", root:"radius(라틴어)=요골", def:"요골을 따라 주행. Radial nerve(요골신경)."},
+    {tag:"Root word", term:"Ulnar", root:"ulna(라틴어)=척골", def:"척골 안쪽을 따라 주행. 척골신경구를 지나 새끼손가락 감각 담당."},
+    {tag:"Root word", term:"Median", root:"medianus(라틴어)=중간의", def:"팔의 정중앙 주행. 손목터널을 통과, 무지구 근육 지배."},
+    {tag:"Root word", term:"Axillary", root:"axilla(라틴어)=겨드랑이", def:"겨드랑이 부위 통과. 삼각근 지배 — 어깨 탈구 시 손상 위험."},
+    {tag:"Root word", term:"Dermatome", root:"derma(피부)+tome(구역)", def:"하나의 척수신경 후근이 담당하는 피부 구역."},
+    {tag:"Root word", term:"Myotome", root:"myo(근육)+tome(구역)", def:"하나의 척수신경이 지배하는 근육군."},
+  ],
+  wordParts: {
+    "Brachial": [{frag:"Brachi", meaning:"팔"}, {frag:"al", meaning:"~의(형용사)"}],
+    "Plexus": [{frag:"Plex", meaning:"짜다,얽다"}, {frag:"us", meaning:"(명사 어미)"}],
+    "Musculocutaneous": [{frag:"Muscul", meaning:"근육"}, {frag:"o", meaning:"(연결모음)"}, {frag:"cutaneous", meaning:"피부의"}],
+    "Radial": [{frag:"Radi", meaning:"요골(바큇살)"}, {frag:"al", meaning:"~의"}],
+    "Ulnar": [{frag:"Uln", meaning:"척골"}, {frag:"ar", meaning:"~의"}],
+    "Median": [{frag:"Medi", meaning:"중간"}, {frag:"an", meaning:"~의"}],
+    "Axillary": [{frag:"Axill", meaning:"겨드랑이"}, {frag:"ary", meaning:"~의"}],
+    "Dermatome": [{frag:"Derm", meaning:"피부"}, {frag:"a", meaning:"(연결모음)"}, {frag:"tome", meaning:"구역,자르다"}],
+    "Myotome": [{frag:"My", meaning:"근육"}, {frag:"o", meaning:"(연결모음)"}, {frag:"tome", meaning:"구역"}]
+  },
+  referenceImage: {
+    url: "https://commons.wikimedia.org/wiki/Special:FilePath/Gray809.png",
+    caption: "상완신경총 실제 도해",
+    credit: "출처: Gray's Anatomy (1918, 퍼블릭 도메인) · Wikimedia Commons"
+  },
+  diagram: {
+    columns: [
+      ["근 (Roots)", ["C5","C6","C7","C8","T1"]],
+      ["간 (Trunks)", ["상간(Superior)","중간(Middle)","하간(Inferior)"]],
+      ["분지 (Divisions)", ["Ant. 상","Post. 상","Ant. 중","Post. 중","Ant. 하","Post. 하"]],
+      ["삭 (Cords)", ["외측삭(Lateral)","후삭(Posterior)","내측삭(Medial)"]],
+      ["말단분지 (Branches)", ["근피신경","정중신경","척골신경","요골신경","액와신경"]]
+    ],
+    connections: {
+      "C5":["상간(Superior)"], "C6":["상간(Superior)"], "C7":["중간(Middle)"], "C8":["하간(Inferior)"], "T1":["하간(Inferior)"],
+      "상간(Superior)":["Ant. 상","Post. 상"], "중간(Middle)":["Ant. 중","Post. 중"], "하간(Inferior)":["Ant. 하","Post. 하"],
+      "Ant. 상":["외측삭(Lateral)"], "Ant. 중":["외측삭(Lateral)"], "Post. 상":["후삭(Posterior)"], "Post. 중":["후삭(Posterior)"], "Post. 하":["후삭(Posterior)"], "Ant. 하":["내측삭(Medial)"],
+      "외측삭(Lateral)":["근피신경","정중신경"], "후삭(Posterior)":["요골신경","액와신경"], "내측삭(Medial)":["척골신경","정중신경"]
+    },
+    nodeDetails: {
+      "C5":{sub:"Root", rows:[["기시","경추 5번째 신경근"],["연결","상간(Superior trunk)"],["손상 시","Erb-Duchenne 마비 — 'waiter's tip' 자세"]]},
+      "C6":{sub:"Root", rows:[["기시","경추 6번째 신경근"],["연결","상간(Superior trunk)"],["손상 시","C5와 함께 Erb's palsy 소견 강화"]]},
+      "C7":{sub:"Root", rows:[["기시","경추 7번째 신경근"],["연결","중간(Middle trunk)"],["손상 시","단독 손상은 드묾, 삼두근 약화 가능"]]},
+      "C8":{sub:"Root", rows:[["기시","경추 8번째 신경근"],["연결","하간(Inferior trunk)"],["손상 시","Klumpke 마비 일부, 손 내재근 약화"]]},
+      "T1":{sub:"Root", rows:[["기시","흉추 1번째 신경근"],["연결","하간(Inferior trunk)"],["손상 시","Klumpke 마비, Horner 증후군 동반 가능"]]},
+      "상간(Superior)":{sub:"Trunk", rows:[["구성","C5+C6"],["다음 단계","전분지·후분지"],["손상 시","Erb's palsy — 견인 분만 손상의 대표 부위"]]},
+      "중간(Middle)":{sub:"Trunk", rows:[["구성","C7 단독"],["다음 단계","전분지·후분지"],["손상 시","단독 손상 드묾"]]},
+      "하간(Inferior)":{sub:"Trunk", rows:[["구성","C8+T1"],["다음 단계","전분지·후분지"],["손상 시","Klumpke's palsy"]]},
+      "외측삭(Lateral)":{sub:"Cord", rows:[["구성","상간·중간 전분지"],["주요 분지","근피신경, 정중신경(외측근)"],["손상 시","이두근 약화, 전완 외측 감각저하"]]},
+      "후삭(Posterior)":{sub:"Cord", rows:[["구성","세 간의 후분지"],["주요 분지","요골신경, 액와신경"],["손상 시","손목처짐(wrist drop), 삼각근 마비"]]},
+      "내측삭(Medial)":{sub:"Cord", rows:[["구성","하간 전분지"],["주요 분지","척골신경, 정중신경(내측근)"],["손상 시","갈퀴손(claw hand)"]]},
+      "근피신경":{sub:"Branch · Nerve", rows:[["기원","외측삭"],["운동","이두근,상완근(굴곡)"],["감각","전완 외측피부"],["손상 시","팔꿈치 굴곡 약화"]]},
+      "정중신경":{sub:"Branch · Nerve", rows:[["기원","외측삭+내측삭"],["운동","전완 굴곡근, 무지구"],["감각","손바닥 요측 3.5개 손가락"],["손상 시","손목터널증후군, ape hand"]]},
+      "척골신경":{sub:"Branch · Nerve", rows:[["기원","내측삭"],["운동","손 내재근 대부분"],["감각","손 척측 1.5개 손가락"],["손상 시","갈퀴손(claw hand)"]]},
+      "요골신경":{sub:"Branch · Nerve", rows:[["기원","후삭"],["운동","삼두근,신전근군"],["감각","손등 요측"],["손상 시","손목처짐(wrist drop)"]]},
+      "액와신경":{sub:"Branch · Nerve", rows:[["기원","후삭"],["운동","삼각근,소원근"],["감각","어깨 외측"],["손상 시","어깨 탈구 시 손상, 외전 약화"]]}
+    }
+  },
+  nodeToTerm: {
+    "근피신경":"Musculocutaneous", "정중신경":"Median", "척골신경":"Ulnar", "요골신경":"Radial", "액와신경":"Axillary"
+  },
+  cases: [
+    {title:"신생아 출산 후 팔이 축 처짐", vignette:"견인 분만 후 신생아. 팔이 내회전, 팔꿈치는 펴진 채 'waiter's tip' 자세. 손목·손가락은 정상.", answer:"Erb-Duchenne 마비 (C5-C6, 상완신경총 상부형)", explain:"상간이 견인력에 취약. 어깨 외전·팔꿈치 굴곡 근육 약화, 손 내재근은 보존."},
+    {title:"오토바이 사고 후 손목이 처짐", vignette:"상완골 중간부 골절. 손목·손가락을 펴지 못하고 손등 요측 감각 저하.", answer:"요골신경 손상", explain:"요골신경구를 나선형으로 지나 골절 시 손상 위험 높음."},
+    {title:"팔꿈치를 오래 괸 후 손가락이 갈퀴 모양", vignette:"척골신경구 압박 후 4·5번째 손가락 갈퀴 모양, 척측 감각 저하.", answer:"척골신경 손상", explain:"내측삭 기원, 손 내재근 대부분 지배."},
+    {title:"어깨 탈구 후 삼각근 부위 감각 저하", vignette:"전방 어깨 탈구 정복 후 외전 어려움, 어깨 바깥쪽 감각 둔화.", answer:"액와신경 손상", explain:"상완골 외과경 아래 지남 — 탈구·경부골절 시 손상."},
+    {title:"손목터널증후군 의심 환자", vignette:"사무직. 밤에 엄지~중지 저림, 무지구 위축.", answer:"정중신경 압박 — 손목터널증후군", explain:"손목터널을 지나며 압박에 취약."}
+  ]
+},
+
+/* ---------- 하지: 요천추신경총 ---------- */
+lumbosacral: {
+  label: "하지 · 요천추신경총", sub: "Lumbosacral Plexus · L2–S3",
+  terms: [
+    {tag:"Root word", term:"Femoral", root:"femur(라틴어)=넓적다리뼈", def:"대퇴신경 — 대퇴사두근 지배, 슬관절 신전 담당."},
+    {tag:"Root word", term:"Obturator", root:"obturare(라틴어)=막다,폐쇄하다", def:"폐쇄공(obturator foramen)을 지나는 신경. 내전근군 지배."},
+    {tag:"Root word", term:"Sciatic", root:"ischion(그리스어)=궁둥이", def:"인체 최대 신경. 경골신경·총비골신경으로 분지."},
+    {tag:"Root word", term:"Tibial", root:"tibia(라틴어)=정강이뼈", def:"경골신경 — 하퇴 후면 근육, 발바닥 감각 담당."},
+    {tag:"Root word", term:"Fibular(Peroneal)", root:"fibula(라틴어)=핀,걸쇠", def:"비골신경 — 비골두 부위 표재, 발등굴곡 담당. 손상 시 foot drop."},
+    {tag:"Root word", term:"Pudendal", root:"pudere(라틴어)=부끄러워하다", def:"음부신경 — 회음부 감각, 괄약근 지배."},
+    {tag:"Root word", term:"Gluteal", root:"gloutos(그리스어)=엉덩이", def:"둔부 근육을 지배하는 신경(상둔/하둔신경)."},
+    {tag:"Root word", term:"Popliteal", root:"poples(라틴어)=오금", def:"무릎 뒤쪽(오금) 부위. Popliteal fossa, popliteal artery."},
+    {tag:"Root word", term:"Saphenous", root:"고대어원 = 숨겨진/뚜렷한", def:"대퇴신경의 감각 분지·대복재정맥에 붙는 이름. 하퇴 내측 감각."},
+    {tag:"Root word", term:"Genicular", root:"geniculum(라틴어)=작은 무릎", def:"무릎 주변을 감싸는 동맥·신경계 명명. Genicular arteries(슬개 주위 동맥)."},
+  ],
+  wordParts: {
+    "Femoral": [{frag:"Femor", meaning:"넓적다리뼈"}, {frag:"al", meaning:"~의"}],
+    "Obturator": [{frag:"Obtur", meaning:"막다,폐쇄하다"}, {frag:"ator", meaning:"~하는 것"}],
+    "Sciatic": [{frag:"Sciat", meaning:"궁둥이"}, {frag:"ic", meaning:"~의"}],
+    "Tibial": [{frag:"Tibi", meaning:"정강이뼈"}, {frag:"al", meaning:"~의"}],
+    "Fibular(Peroneal)": [{frag:"Fibul", meaning:"비골(핀,걸쇠)"}, {frag:"ar", meaning:"~의"}],
+    "Pudendal": [{frag:"Pudend", meaning:"부끄러워하다"}, {frag:"al", meaning:"~의"}],
+    "Gluteal": [{frag:"Glute", meaning:"엉덩이"}, {frag:"al", meaning:"~의"}],
+    "Popliteal": [{frag:"Poplite", meaning:"오금"}, {frag:"al", meaning:"~의"}],
+    "Saphenous": [{frag:"Saphen", meaning:"숨겨진/뚜렷한"}, {frag:"ous", meaning:"~의"}],
+    "Genicular": [{frag:"Genicul", meaning:"작은 무릎"}, {frag:"ar", meaning:"~의"}]
+  },
+  referenceImage: {
+    url: "https://commons.wikimedia.org/wiki/Special:FilePath/Gray828.png",
+    caption: "요천추신경총 실제 도해",
+    credit: "출처: Gray's Anatomy (1918, 퍼블릭 도메인) · Wikimedia Commons"
+  },
+  diagram: {
+    columns: [
+      ["근 (Roots)", ["L2","L3","L4","L5","S1","S2","S3"]],
+      ["신경총 (Plexus)", ["요신경총(Lumbar)","천골신경총(Sacral)"]],
+      ["주요 신경", ["대퇴신경","폐쇄신경","좌골신경","상둔신경","하둔신경","음부신경"]],
+      ["좌골신경 분지", ["경골신경","총비골신경"]]
+    ],
+    connections: {
+      "L2":["요신경총(Lumbar)"], "L3":["요신경총(Lumbar)"], "L4":["요신경총(Lumbar)","천골신경총(Sacral)"],
+      "L5":["천골신경총(Sacral)"], "S1":["천골신경총(Sacral)"], "S2":["천골신경총(Sacral)"], "S3":["천골신경총(Sacral)"],
+      "요신경총(Lumbar)":["대퇴신경","폐쇄신경"],
+      "천골신경총(Sacral)":["좌골신경","상둔신경","하둔신경","음부신경"],
+      "좌골신경":["경골신경","총비골신경"]
+    },
+    nodeDetails: {
+      "L2":{sub:"Root", rows:[["연결","요신경총"],["비고","대퇴신경·폐쇄신경 형성에 기여"]]},
+      "L3":{sub:"Root", rows:[["연결","요신경총"],["비고","대퇴신경 주요 기여근"]]},
+      "L4":{sub:"Root", rows:[["연결","요신경총 + 천골신경총"],["비고","요천추간(lumbosacral trunk) 형성 — 두 신경총을 잇는 다리 역할"]]},
+      "L5":{sub:"Root", rows:[["연결","천골신경총"],["비고","좌골신경 주요 기여근"]]},
+      "S1":{sub:"Root", rows:[["연결","천골신경총"],["비고","좌골신경, 하둔신경에 기여"]]},
+      "S2":{sub:"Root", rows:[["연결","천골신경총"],["비고","음부신경 형성에 기여"]]},
+      "S3":{sub:"Root", rows:[["연결","천골신경총"],["비고","음부신경·회음부 감각에 기여"]]},
+      "요신경총(Lumbar)":{sub:"Plexus", rows:[["위치","요추 대요근(psoas major) 내부"],["구성","L2-L4"],["주요 분지","대퇴신경, 폐쇄신경"]]},
+      "천골신경총(Sacral)":{sub:"Plexus", rows:[["위치","이상근(piriformis) 앞쪽"],["구성","L4-S3"],["주요 분지","좌골신경, 둔신경, 음부신경"]]},
+      "대퇴신경":{sub:"Nerve", rows:[["운동","대퇴사두근(슬관절 신전)"],["감각","대퇴 전면, 하퇴 내측(복재신경)"],["손상 시","슬관절 신전 약화, 골반 골절·서혜부 수술 위험"]]},
+      "폐쇄신경":{sub:"Nerve", rows:[["운동","내전근군"],["감각","대퇴 내측"],["손상 시","대퇴 내전 약화, 고관절 수술 시 위험"]]},
+      "좌골신경":{sub:"Nerve", rows:[["운동","슬괵근(대퇴이두근 등)"],["분지","경골신경, 총비골신경"],["손상 시","엉덩이 주사·후방 탈구 시 하지 전체 약화"]]},
+      "상둔신경":{sub:"Nerve", rows:[["운동","중둔근,소둔근,대퇴근막장근"],["임상","손상 시 Trendelenburg 징후(반대측 골반 처짐)"]]},
+      "하둔신경":{sub:"Nerve", rows:[["운동","대둔근"],["임상","계단 오르기·고관절 신전 약화"]]},
+      "음부신경":{sub:"Nerve", rows:[["운동/감각","회음부 감각, 항문·요도 괄약근"],["임상","분만·장시간 자전거 압박 손상"]]},
+      "경골신경":{sub:"Terminal Branch", rows:[["운동","비복근,가자미근(발바닥굴곡)"],["감각","발바닥"],["손상 시","발바닥굴곡 약화"]]},
+      "총비골신경":{sub:"Terminal Branch", rows:[["운동","발등굴곡근(전경골근 등)"],["주행","비골두 표재 — 압박에 취약"],["손상 시","발처짐(foot drop) — 대표적 손상"]]}
+    }
+  },
+  nodeToTerm: {
+    "대퇴신경":"Femoral", "폐쇄신경":"Obturator", "좌골신경":"Sciatic", "경골신경":"Tibial", "총비골신경":"Fibular(Peroneal)", "음부신경":"Pudendal"
+  },
+  cases: [
+    {title:"무릎 수술 후 힘이 빠짐", vignette:"슬관절 수술 후 대퇴사두근 힘이 빠지고 슬개골건 반사가 저하됨.", answer:"대퇴신경 손상", explain:"대퇴사두근을 지배하며 슬관절 신전을 담당."},
+    {title:"종아리 바깥쪽 압박 후 발등을 못 듦", vignette:"다리를 꼬고 오래 앉은 뒤 비골두 부위 압박, 발등을 들어올리지 못함(foot drop).", answer:"총비골신경 손상", explain:"비골두 주위를 표재적으로 지나 압박에 매우 취약."},
+    {title:"엉덩이 주사 후 다리 전체 약화", vignette:"둔부 주사 후 다리 전체 약화, 발등·발바닥 감각 저하.", answer:"좌골신경 손상", explain:"인체 최대 신경, 부적절한 주사 위치에서 손상 위험."},
+    {title:"외다리로 서면 반대쪽 골반이 처짐", vignette:"한쪽 다리로 서면 반대쪽 골반이 아래로 처지는 Trendelenburg 징후.", answer:"상둔신경 손상 (중둔근 약화)", explain:"중둔근이 지지측 골반을 수평으로 유지시키는 역할을 함."},
+    {title:"장시간 자전거 후 회음부 저림", vignette:"장거리 라이딩 후 회음부 저림과 감각 저하.", answer:"음부신경 압박", explain:"안장에 의한 만성 압박으로 발생하는 대표적 신경병증."}
+  ]
+},
+
+/* ---------- 두경부: 뇌신경 ---------- */
+cranial: {
+  label: "두경부 · 뇌신경", sub: "12 Cranial Nerves",
+  terms: [
+    {tag:"Root word", term:"Olfactory", root:"olfacere(라틴어)=냄새맡다", def:"CN1 후각신경 — 후각 상피에서 기원, 대뇌(전두엽)로 직접 연결."},
+    {tag:"Root word", term:"Optic", root:"opticos(그리스어)=시각의", def:"CN2 시신경 — 망막에서 기원, 엄밀히는 뇌의 일부(중추신경계 백질)."},
+    {tag:"Root word", term:"Trigeminal", root:"tri(3)+geminus(쌍둥이)", def:"CN5 삼차신경 — 안신경/상악신경/하악신경 3개 분지."},
+    {tag:"Root word", term:"Facial", root:"facies(라틴어)=얼굴", def:"CN7 안면신경 — 표정근 운동, 혀 앞 2/3 미각."},
+    {tag:"Root word", term:"Vestibulocochlear", root:"vestibulum(전정)+cochlea(달팽이관)", def:"CN8 — 평형(전정)과 청각(와우) 두 기능을 함께 담당."},
+    {tag:"Root word", term:"Glossopharyngeal", root:"glossa(혀)+pharynx(인두)", def:"CN9 설인신경 — 혀 뒤 1/3 미각·인두 감각."},
+    {tag:"Root word", term:"Vagus", root:"vagus(라틴어)=방랑하는", def:"CN10 미주신경 — 흉복부까지 광범위하게 분포하는 유일한 뇌신경."},
+    {tag:"Root word", term:"Hypoglossal", root:"hypo(아래)+glossa(혀)", def:"CN12 설하신경 — 혀 아래를 주행, 혀 근육 운동 담당."},
+    {tag:"Root word", term:"Trochlear", root:"trochlea(라틴어)=도르래", def:"CN4 활차신경 — 상사근 힘줄이 지나는 도르래 구조에서 이름 유래."},
+    {tag:"Root word", term:"Abducens", root:"abducere(라틴어)=밖으로 이끌다", def:"CN6 외전신경 — 외직근을 지배해 눈을 바깥쪽으로 돌림."},
+  ],
+  wordParts: {
+    "Olfactory": [{frag:"Olfact", meaning:"냄새맡다"}, {frag:"ory", meaning:"~하는"}],
+    "Optic": [{frag:"Opt", meaning:"시각"}, {frag:"ic", meaning:"~의"}],
+    "Trigeminal": [{frag:"Tri", meaning:"3"}, {frag:"gemin", meaning:"쌍둥이"}, {frag:"al", meaning:"~의"}],
+    "Facial": [{frag:"Faci", meaning:"얼굴"}, {frag:"al", meaning:"~의"}],
+    "Vestibulocochlear": [{frag:"Vestibul", meaning:"전정"}, {frag:"o", meaning:"(연결모음)"}, {frag:"cochle", meaning:"달팽이관"}, {frag:"ar", meaning:"~의"}],
+    "Glossopharyngeal": [{frag:"Glosso", meaning:"혀"}, {frag:"pharyng", meaning:"인두"}, {frag:"eal", meaning:"~의"}],
+    "Vagus": [{frag:"Vag", meaning:"방랑하는"}, {frag:"us", meaning:"(명사 어미)"}],
+    "Hypoglossal": [{frag:"Hypo", meaning:"아래"}, {frag:"gloss", meaning:"혀"}, {frag:"al", meaning:"~의"}],
+    "Trochlear": [{frag:"Trochle", meaning:"도르래"}, {frag:"ar", meaning:"~의"}],
+    "Abducens": [{frag:"Ab", meaning:"밖으로"}, {frag:"duc", meaning:"이끌다"}, {frag:"ens", meaning:"~하는"}]
+  },
+  referenceImage: {
+    url: "https://commons.wikimedia.org/wiki/Special:FilePath/1320_The_Cranial_Nerves.jpg",
+    caption: "뇌 기저부에서 본 12쌍 뇌신경 실제 도해",
+    credit: "출처: OpenStax, CC BY 4.0 · Wikimedia Commons"
+  },
+  diagram: {
+    columns: [
+      ["기원 부위", ["대뇌/기타","중뇌(Midbrain)","교뇌(Pons)","연수(Medulla)"]],
+      ["뇌신경", ["CN1 후각","CN2 시각","CN3 동안","CN4 활차","CN5 삼차","CN6 외전","CN7 안면","CN8 전정와우","CN9 설인","CN10 미주","CN11 부신경","CN12 설하"]],
+      ["기능 분류", ["감각(Sensory)","운동(Motor)","혼합(Mixed)"]]
+    ],
+    connections: {
+      "대뇌/기타":["CN1 후각","CN2 시각"],
+      "중뇌(Midbrain)":["CN3 동안","CN4 활차"],
+      "교뇌(Pons)":["CN5 삼차","CN6 외전","CN7 안면","CN8 전정와우"],
+      "연수(Medulla)":["CN9 설인","CN10 미주","CN11 부신경","CN12 설하"],
+      "CN1 후각":["감각(Sensory)"], "CN2 시각":["감각(Sensory)"], "CN8 전정와우":["감각(Sensory)"],
+      "CN3 동안":["운동(Motor)"], "CN4 활차":["운동(Motor)"], "CN6 외전":["운동(Motor)"], "CN11 부신경":["운동(Motor)"], "CN12 설하":["운동(Motor)"],
+      "CN5 삼차":["혼합(Mixed)"], "CN7 안면":["혼합(Mixed)"], "CN9 설인":["혼합(Mixed)"], "CN10 미주":["혼합(Mixed)"]
+    },
+    nodeDetails: {
+      "대뇌/기타":{sub:"Origin", rows:[["설명","뇌간을 거치지 않고 대뇌/간뇌에서 직접 기원"],["해당","CN1, CN2"]]},
+      "중뇌(Midbrain)":{sub:"Origin", rows:[["해당","CN3, CN4"],["암기","눈 운동 관련 신경 다수 기원"]]},
+      "교뇌(Pons)":{sub:"Origin", rows:[["해당","CN5, CN6, CN7, CN8"],["암기","얼굴·청각·평형 관련 신경 밀집"]]},
+      "연수(Medulla)":{sub:"Origin", rows:[["해당","CN9, CN10, CN11, CN12"],["암기","삼킴·발성·혀 운동 관련 신경 밀집"]]},
+      "CN1 후각":{sub:"Cranial Nerve I", rows:[["기능","후각"],["통과공","사판(cribriform plate)"],["손상 시","후각 소실(anosmia) — 두부외상 시 흔함"]]},
+      "CN2 시각":{sub:"Cranial Nerve II", rows:[["기능","시각"],["통과공","시신경관(optic canal)"],["손상 시","시야 결손, 실명"]]},
+      "CN3 동안":{sub:"Cranial Nerve III", rows:[["기능","안구운동(대부분),동공수축,안검거상"],["손상 시","안검하수+동공산대+외측 사시('down and out')"]]},
+      "CN4 활차":{sub:"Cranial Nerve IV", rows:[["기능","상사근 — 안구 아래·내측 회전"],["손상 시","계단 내려갈 때 복시"]]},
+      "CN5 삼차":{sub:"Cranial Nerve V", rows:[["기능","안면 감각(3분지) + 저작근 운동"],["손상 시","삼차신경통, 각막반사 소실"]]},
+      "CN6 외전":{sub:"Cranial Nerve VI", rows:[["기능","외직근 — 안구 외전"],["손상 시","내사시, 복시(수평)"]]},
+      "CN7 안면":{sub:"Cranial Nerve VII", rows:[["기능","표정근 운동, 혀 앞2/3 미각, 눈물/침 분비"],["손상 시","말초성: 이마 포함 편측 마비(Bell's palsy) / 중추성: 이마 보존"]]},
+      "CN8 전정와우":{sub:"Cranial Nerve VIII", rows:[["기능","청각(cochlear) + 평형(vestibular)"],["손상 시","난청, 어지럼증, 이명"]]},
+      "CN9 설인":{sub:"Cranial Nerve IX", rows:[["기능","혀 뒤1/3 미각·감각, 인두 감각, 이하선 분비"],["손상 시","구역반사 소실, 삼킴곤란"]]},
+      "CN10 미주":{sub:"Cranial Nerve X", rows:[["기능","인두·후두 운동, 흉복부 부교감신경"],["손상 시","목젖 편위, 쉰 목소리, 삼킴곤란"]]},
+      "CN11 부신경":{sub:"Cranial Nerve XI", rows:[["기능","흉쇄유돌근, 승모근 운동"],["손상 시","고개 돌리기·어깨 으쓱 약화"]]},
+      "CN12 설하":{sub:"Cranial Nerve XII", rows:[["기능","혀 근육 운동"],["손상 시","혀 내밀 때 손상측으로 편위"]]},
+      "감각(Sensory)":{sub:"Function type", rows:[["의미","순수 감각신경"],["암기","Some Say Marry Money..."]]},
+      "운동(Motor)":{sub:"Function type", rows:[["의미","순수 운동신경"],["암기","...But My Brother Says..."]]},
+      "혼합(Mixed)":{sub:"Function type", rows:[["의미","감각+운동 모두 담당"],["암기","...Big Brains Matter More (S/M/B 뇌신경 12쌍 기능 분류 니모닉)"]]}
+    }
+  },
+  nodeToTerm: {
+    "CN1 후각":"Olfactory", "CN2 시각":"Optic", "CN4 활차":"Trochlear", "CN5 삼차":"Trigeminal",
+    "CN6 외전":"Abducens", "CN7 안면":"Facial", "CN8 전정와우":"Vestibulocochlear",
+    "CN9 설인":"Glossopharyngeal", "CN10 미주":"Vagus", "CN12 설하":"Hypoglossal"
+  },
+  cases: [
+    {title:"한쪽 얼굴이 이마까지 처짐", vignette:"한쪽 얼굴 전체(이마 포함)가 처지고 눈을 감지 못함.", answer:"CN7 안면신경 마비 (말초성, Bell's palsy)", explain:"말초성은 이마까지 침범, 중추성은 이마 보존 — 상부 안면근이 양측 대뇌지배를 받기 때문."},
+    {title:"복시와 내사시", vignette:"사물이 둘로 보이고, 눈을 안쪽에서 바깥쪽으로 돌리지 못함.", answer:"CN6 외전신경 손상", explain:"외직근을 지배해 안구를 외전시키는 신경."},
+    {title:"혀를 내밀면 한쪽으로 치우침", vignette:"혀를 내밀게 하니 한쪽 방향으로 편위됨.", answer:"CN12 설하신경 손상", explain:"손상된 쪽 이설근이 약화되어 혀가 손상측으로 편위."},
+    {title:"고개 돌리기와 어깨 으쓱이 약함", vignette:"고개를 반대로 돌리거나 어깨를 으쓱하는 힘이 약함.", answer:"CN11 부신경 손상", explain:"흉쇄유돌근과 승모근을 지배."},
+    {title:"삼킴곤란과 목젖 편위", vignette:"음식을 삼키기 어렵고, '아' 소리를 낼 때 목젖이 한쪽으로 치우침.", answer:"CN10 미주신경 손상", explain:"인두·후두 근육을 지배 — 목젖은 정상측으로 편위됨."}
+  ]
+}
+};
+
+/* ================= STATE / STORAGE ================= */
+const STORAGE_KEY = 'anatomy_atlas_state_v1';
+let state = loadState();
+function loadState(){
+  let s = null;
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw) s = JSON.parse(raw);
+  }catch(e){}
+  const defaults = { currentSystem:'brachial', currentView:'overview', srs:{}, verified:{}, custom:{}, adminMode:false, adminPin:null, gameHighScore:{} };
+  return Object.assign({}, defaults, s || {});
+}
+function saveState(){
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }catch(e){}
+}
+
+/* ================= SYSTEM SELECTOR ================= */
+function renderSystemSelect(){
+  const wrap = document.getElementById('system-select');
+  wrap.innerHTML = '';
+  Object.keys(SYSTEMS).forEach(key=>{
+    const btn = document.createElement('button');
+    btn.className = 'sys-pill' + (key===state.currentSystem ? ' active':'');
+    btn.textContent = SYSTEMS[key].label;
+    btn.onclick = ()=>{ state.currentSystem = key; saveState(); onSystemChange(); };
+    wrap.appendChild(btn);
+  });
+}
+function onSystemChange(){
+  renderSystemSelect();
+  document.getElementById('header-sub').textContent = SYSTEMS[state.currentSystem].sub;
+  document.getElementById('structure-title').textContent = '구조 시각화 — ' + SYSTEMS[state.currentSystem].label;
+  cardQueue = null; cardPos = 0;
+  examState = null;
+  gameState = null;
+  renderOverview();
+  refreshFlashcard();
+  newQuiz();
+  buildColumns();
+  buildCases();
+  if(state.currentView === 'exam') renderExamIntro();
+  if(state.currentView === 'game') startGame();
+}
+
+/* ================= NAV / HISTORY ================= */
+const VALID_VIEWS = ['overview','terms','structure','clinical','exam','game'];
+
+function applyView(view){
+  document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active', b.dataset.view===view));
+  document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active', v.id === 'view-'+view));
+  state.currentView = view; saveState();
+  if(view === 'structure'){ setTimeout(drawConnectors, 30); }
+  if(view === 'exam' && !examState){ renderExamIntro(); }
+  if(view === 'game' && !gameState){ startGame(); }
+  window.scrollTo(0, 0);
+}
+function switchView(view, pushHistory){
+  if(!VALID_VIEWS.includes(view)) view = 'overview';
+  applyView(view);
+  if(pushHistory){
+    history.pushState({view}, '', '#'+view);
+  }
+}
+
+document.querySelectorAll('nav button').forEach(btn=>{
+  btn.addEventListener('click', ()=> switchView(btn.dataset.view, true));
+});
+
+document.getElementById('logo-home').addEventListener('click', ()=> switchView('overview', true));
+document.getElementById('logo-home').addEventListener('keydown', (e)=>{
+  if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); switchView('overview', true); }
+});
+
+window.addEventListener('popstate', (e)=>{
+  const view = (e.state && e.state.view) || 'overview';
+  applyView(view);
+});
+
+/* ================= CONTENT MERGE HELPERS ================= */
+function ensureCustomBucket(sysKey){
+  if(!state.custom[sysKey]) state.custom[sysKey] = { terms:[], cases:[] };
+  if(!state.custom[sysKey].terms) state.custom[sysKey].terms = [];
+  if(!state.custom[sysKey].cases) state.custom[sysKey].cases = [];
+  return state.custom[sysKey];
+}
+function getTerms(sysKey){
+  const builtin = SYSTEMS[sysKey].terms.map((t,i)=>Object.assign({}, t, {id:sysKey+'::'+i, custom:false}));
+  const bucket = ensureCustomBucket(sysKey);
+  return builtin.concat(bucket.terms);
+}
+function getCases(sysKey){
+  const builtin = SYSTEMS[sysKey].cases.map((c,i)=>Object.assign({}, c, {id:sysKey+'::case::'+i, custom:false}));
+  const bucket = ensureCustomBucket(sysKey);
+  return builtin.concat(bucket.cases);
+}
+
+/* ================= EXPORT / IMPORT (share content without a backend) ================= */
+function exportContent(){
+  const payload = {
+    kind: 'anatomy-atlas-content-export',
+    version: 1,
+    exportedAt: new Date().toISOString(),
+    custom: state.custom,
+    verified: state.verified
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `anatomy-atlas-content-${new Date().toISOString().slice(0,10)}.json`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+  document.getElementById('share-status').textContent = '내보내기 완료 — 다운로드된 파일을 학생들에게 전달하세요.';
+}
+function importContent(evt){
+  const file = evt.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = ()=>{
+    const statusEl = document.getElementById('share-status');
+    try{
+      const data = JSON.parse(reader.result);
+      if(data.kind !== 'anatomy-atlas-content-export'){
+        statusEl.textContent = '이 파일은 이 앱에서 만든 콘텐츠 파일이 아닌 것 같습니다.';
+        statusEl.style.color = 'var(--artery)';
+        return;
+      }
+      let addedTerms = 0, addedCases = 0;
+      Object.keys(data.custom || {}).forEach(sysKey=>{
+        if(!SYSTEMS[sysKey]) return; // ignore unknown systems
+        const bucket = ensureCustomBucket(sysKey);
+        const existingIds = new Set(bucket.terms.map(t=>t.id).concat(bucket.cases.map(c=>c.id)));
+        (data.custom[sysKey].terms || []).forEach(t=>{
+          if(!existingIds.has(t.id)){ bucket.terms.push(t); addedTerms++; }
+        });
+        (data.custom[sysKey].cases || []).forEach(c=>{
+          if(!existingIds.has(c.id)){ bucket.cases.push(c); addedCases++; }
+        });
+      });
+      // Verified flags are only trusted from an import if the importer is
+      // currently in unlocked admin/검수 mode — otherwise a shared file could
+      // be used to silently mark unreviewed content as "verified".
+      let importedVerified = 0;
+      if(data.verified && state.adminMode){
+        Object.keys(data.verified).forEach(id=>{ if(data.verified[id]){ state.verified[id] = true; importedVerified++; } });
+      }
+      saveState();
+      statusEl.style.color = 'var(--nerve)';
+      statusEl.textContent = `가져오기 완료 — 카드 ${addedTerms}개, 시나리오 ${addedCases}개 추가됨.` +
+        (data.verified && !state.adminMode ? ' (검수 표시는 검수 모드가 아니라서 반영하지 않았습니다.)' : (importedVerified ? ` 검수 표시 ${importedVerified}건 반영.` : ''));
+      renderOverview(); refreshFlashcard(); newQuiz(); buildCases();
+    }catch(e){
+      statusEl.style.color = 'var(--artery)';
+      statusEl.textContent = '파일을 읽지 못했습니다. JSON 형식이 맞는지 확인해주세요.';
+    }
+    evt.target.value = '';
+  };
+  reader.readAsText(file);
+}
+
+/* ================= OVERVIEW ================= */
+function masteredRatio(sysKey){
+  const terms = getTerms(sysKey);
+  let mastered = 0;
+  terms.forEach(t=>{
+    const rec = state.srs[t.id];
+    if(rec && rec.box >= 5) mastered++;
+  });
+  return terms.length ? mastered/terms.length : 0;
+}
+function dueCount(sysKey){
+  const terms = getTerms(sysKey);
+  const now = Date.now();
+  let due = 0;
+  terms.forEach(t=>{
+    const rec = state.srs[t.id];
+    if(!rec || new Date(rec.due).getTime() <= now) due++;
+  });
+  return due;
+}
+function renderOverview(){
+  const sys = SYSTEMS[state.currentSystem];
+  const grid = document.getElementById('stat-grid');
+  const termCount = getTerms(state.currentSystem).length;
+  const caseCount = getCases(state.currentSystem).length;
+  grid.innerHTML = `
+    <div class="stat-card"><div class="num">${termCount}</div><div class="label">암기 용어 카드</div></div>
+    <div class="stat-card"><div class="num">${sys.diagram.columns.reduce((a,c)=>a+c[1].length,0)}</div><div class="label">구조 노드</div></div>
+    <div class="stat-card"><div class="num">${caseCount}</div><div class="label">임상 시나리오</div></div>
+    <div class="stat-card"><div class="num">${dueCount(state.currentSystem)}</div><div class="label">오늘 복습할 카드</div></div>
+  `;
+  document.getElementById('progress-fill').style.width = Math.round(masteredRatio(state.currentSystem)*100)+'%';
+}
+
+/* ================= FLASHCARDS + SRS ================= */
+// box 0..5 = long-term (day-based) spacing once a card "graduates" out of relearning.
+// A card must be answered "know" GRADUATE_STREAK times in a row (within or across sessions)
+// before it graduates to the next box; "again" always resets it to same-day relearning,
+// so short-term (same-session) repetition is kept separate from long-term day intervals.
+const BOX_INTERVAL_DAYS = [0, 1, 3, 7, 14, 30];
+const GRADUATE_STREAK = 2;
+let cardQueue = null;
+let cardPos = 0;
+let flipped = false;
+
+function buildQueue(){
+  const terms = getTerms(state.currentSystem);
+  const now = Date.now();
+  const items = terms.map(t=>{
+    const rec = state.srs[t.id] || {box:0, due:new Date(0).toISOString(), streak:0};
+    return { id:t.id, term:t, box:rec.box, streak:rec.streak||0, due:new Date(rec.due).getTime() };
+  });
+  items.sort((a,b)=>{
+    const aDue = a.due <= now, bDue = b.due <= now;
+    if(aDue !== bDue) return aDue ? -1 : 1;
+    return a.box - b.box;
+  });
+  return items;
+}
+function refreshFlashcard(){
+  cardQueue = buildQueue();
+  cardPos = 0;
+  renderCard();
+}
+function renderCard(){
+  if(!cardQueue || !cardQueue.length) return;
+  const q = cardQueue[cardPos % cardQueue.length];
+  const t = q.term;
+  document.getElementById('fc-tag').textContent = `${t.tag} · ${cardPos%cardQueue.length+1}/${cardQueue.length}`;
+  document.getElementById('fc-box').textContent = `Box ${q.box}/5 · ${q.streak}/${GRADUATE_STREAK}`;
+  document.getElementById('fc-term').textContent = t.term;
+  document.getElementById('fc-root').textContent = t.root;
+  document.getElementById('fc-def').textContent = t.def;
+  document.getElementById('fc-front').style.display = 'block';
+  document.getElementById('fc-back').style.display = 'none';
+  flipped = false;
+  document.getElementById('srs-status').innerHTML =
+    `<span>오늘 복습: <b>${dueCount(state.currentSystem)}</b>장</span><span>마스터: <b>${Math.round(masteredRatio(state.currentSystem)*100)}%</b></span>`;
+}
+function flipCard(){
+  flipped = !flipped;
+  document.getElementById('fc-front').style.display = flipped ? 'none':'block';
+  document.getElementById('fc-back').style.display = flipped ? 'block':'none';
+}
+function toggleTermForm(){
+  document.getElementById('term-add-form').classList.toggle('open');
+}
+function addCustomTerm(){
+  const term = document.getElementById('term-term-input').value.trim();
+  const root = document.getElementById('term-root-input').value.trim();
+  const def = document.getElementById('term-def-input').value.trim();
+  if(!term || !def){ alert('용어와 설명은 꼭 입력해주세요.'); return; }
+  const bucket = ensureCustomBucket(state.currentSystem);
+  const id = state.currentSystem+'::custom::'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+  bucket.terms.push({ id, tag:'직접 추가', term, root: root || '(어원 미입력)', def, custom:true });
+  saveState();
+  document.getElementById('term-term-input').value = '';
+  document.getElementById('term-root-input').value = '';
+  document.getElementById('term-def-input').value = '';
+  refreshFlashcard();
+  renderOverview();
+}
+function rateCard(e, result){
+  e.stopPropagation();
+  const qIdx = cardPos % cardQueue.length;
+  const q = cardQueue[qIdx];
+  const id = q.id;
+  const prev = state.srs[id] || {box:0, streak:0};
+  let box = prev.box, streak = prev.streak || 0;
+  const now = new Date();
+  let requeueSoon = false;
+
+  if(result === 'again'){
+    // Relearning: don't touch the long-term box, just reset the streak and
+    // show this card again soon within THIS session (not tomorrow).
+    streak = 0;
+    state.srs[id] = { box, streak, due: now.toISOString() };
+    requeueSoon = true;
+  } else {
+    streak++;
+    if(streak >= GRADUATE_STREAK){
+      // Graduated: only now does it move to a real day-based interval.
+      box = Math.min(box+1, 5);
+      streak = 0;
+      const due = new Date(now.getTime() + BOX_INTERVAL_DAYS[box]*24*60*60*1000);
+      state.srs[id] = { box, streak, due: due.toISOString() };
+    } else {
+      // Correct, but still needs one more correct rep before it graduates —
+      // keep it due today so it resurfaces this session, not days from now.
+      state.srs[id] = { box, streak, due: now.toISOString() };
+      requeueSoon = true;
+    }
+  }
+  saveState();
+
+  if(requeueSoon && cardQueue.length > 1){
+    // Reinsert a few cards later in the current session queue instead of
+    // waiting for a full lap, so short-term repetition happens sooner.
+    const insertAt = Math.min(qIdx + 3, cardQueue.length - 1);
+    cardQueue.splice(qIdx, 1);
+    cardQueue.splice(insertAt, 0, { id:q.id, term:q.term, box, streak, due: now.getTime() });
+    // stay at the same position (next card slides into qIdx)
+  } else {
+    cardPos++;
+    if(cardPos % cardQueue.length === 0){ cardQueue = buildQueue(); }
+  }
+  renderCard();
+  renderOverview();
+}
+
+/* ================= QUIZ ================= */
+let quizScore = {correct:0, total:0};
+let quizMode = 'mc'; // 'mc' = 객관식(재인), 'recall' = 주관식(회상)
+
+// Edit distance so typos/small misspellings still count as correct,
+// instead of the old crude substring+length-ratio heuristic.
+function levenshtein(a, b){
+  const m = a.length, n = b.length;
+  if(m === 0) return n;
+  if(n === 0) return m;
+  const dp = new Array(n+1);
+  for(let j=0;j<=n;j++) dp[j] = j;
+  for(let i=1;i<=m;i++){
+    let prev = dp[0];
+    dp[0] = i;
+    for(let j=1;j<=n;j++){
+      const tmp = dp[j];
+      dp[j] = a[i-1] === b[j-1]
+        ? prev
+        : 1 + Math.min(prev, dp[j], dp[j-1]);
+      prev = tmp;
+    }
+  }
+  return dp[n];
+}
+// Tolerance scales with word length: short words allow 1 typo, longer allow more.
+function fuzzyMatches(userInput, correctTerm){
+  const norm = s => s.toLowerCase().trim().replace(/[\s\-·(),]/g,'');
+  const u = norm(userInput), c = norm(correctTerm);
+  if(!u) return false;
+  const dist = levenshtein(u, c);
+  const tolerance = c.length <= 4 ? 1 : c.length <= 8 ? 2 : Math.floor(c.length*0.25);
+  return dist <= tolerance;
+}
+
+function setQuizMode(mode){
+  quizMode = mode;
+  document.querySelectorAll('.quiz-mode-btn').forEach(b=>b.classList.toggle('active', b.dataset.mode===mode));
+  newQuiz();
+}
+function newQuiz(){
+  const terms = getTerms(state.currentSystem);
+  const correctIdx = Math.floor(Math.random()*terms.length);
+  const correct = terms[correctIdx];
+  const optsDiv = document.getElementById('quiz-opts');
+
+  if(quizMode === 'recall'){
+    document.getElementById('quiz-q').textContent = `이 설명에 맞는 용어는? "${correct.def}"`;
+    optsDiv.innerHTML = `
+      <input type="text" id="recall-input" class="recall-input" placeholder="용어를 입력하세요 (한글/영문 모두 가능)" autocomplete="off">
+      <button class="btn primary" id="recall-submit" style="margin-top:8px;">확인</button>
+      <div class="recall-feedback" id="recall-feedback"></div>
+    `;
+    const input = document.getElementById('recall-input');
+    const submit = ()=>{
+      const isCorrect = fuzzyMatches(input.value || '', correct.term);
+      quizScore.total++;
+      const fb = document.getElementById('recall-feedback');
+      if(isCorrect){
+        quizScore.correct++;
+        fb.innerHTML = `<span style="color:var(--nerve)">정답! → ${correct.term}</span>`;
+      } else {
+        fb.innerHTML = `<span style="color:var(--artery)">아쉬워요. 정답: ${correct.term}</span>`;
+      }
+      document.getElementById('quiz-score').textContent = `맞은 개수: ${quizScore.correct} / ${quizScore.total}`;
+      input.disabled = true; submit.onclick = null;
+      document.getElementById('recall-submit').disabled = true;
+      setTimeout(newQuiz, 1400);
+    };
+    document.getElementById('recall-submit').onclick = submit;
+    input.addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); submit(); } });
+    input.focus();
+    return;
+  }
+
+  // 객관식(재인) 모드 — 어원 4지선다
+  let pool = terms.filter((_,i)=>i!==correctIdx);
+  pool.sort(()=>Math.random()-0.5);
+  const distractors = pool.slice(0,3).map(t=>t.root);
+  const options = [correct.root, ...distractors].sort(()=>Math.random()-0.5);
+  document.getElementById('quiz-q').textContent = `"${correct.term}"의 어원(root)은?`;
+  optsDiv.innerHTML = '';
+  options.forEach(opt=>{
+    const b = document.createElement('button');
+    b.className = 'quiz-opt';
+    b.textContent = opt;
+    b.onclick = ()=>{
+      quizScore.total++;
+      if(opt === correct.root){ b.classList.add('correct'); quizScore.correct++; }
+      else{
+        b.classList.add('wrong');
+        [...optsDiv.children].find(c=>c.textContent===correct.root).classList.add('correct');
+      }
+      document.getElementById('quiz-score').textContent = `맞은 개수: ${quizScore.correct} / ${quizScore.total}`;
+      [...optsDiv.children].forEach(c=>c.onclick=null);
+      setTimeout(newQuiz, 1100);
+    };
+    optsDiv.appendChild(b);
+  });
+}
+
+/* ================= STRUCTURE DIAGRAM ================= */
+function buildColumns(){
+  const sys = SYSTEMS[state.currentSystem];
+  renderRefImage(sys);
+  const row = document.getElementById('columns-row');
+  row.innerHTML = '';
+  sys.diagram.columns.forEach(([label, items])=>{
+    const col = document.createElement('div');
+    col.className = 'plexus-col';
+    const lab = document.createElement('div');
+    lab.className = 'col-label';
+    lab.textContent = label;
+    col.appendChild(lab);
+    items.forEach(item=>{
+      const n = document.createElement('div');
+      n.className = 'node';
+      n.textContent = item;
+      n.dataset.id = item;
+      n.onclick = ()=>selectNode(item, n);
+      col.appendChild(n);
+    });
+    row.appendChild(col);
+  });
+  document.getElementById('detail-panel').innerHTML = '<p class="empty-hint">왼쪽에서 구조를 클릭해 보세요.</p>';
+  setTimeout(()=>drawConnectors(), 30);
+}
+function renderRefImage(sys){
+  const card = document.getElementById('ref-image-card');
+  if(!sys.referenceImage){ card.classList.remove('visible'); card.innerHTML=''; return; }
+  const img = sys.referenceImage;
+  card.innerHTML = `
+    <img src="${img.url}" alt="${img.caption}"
+         onerror="this.closest('.ref-image-card').classList.remove('visible')"
+         onload="this.closest('.ref-image-card').classList.add('visible')">
+    <div class="ref-caption">${img.caption}</div>
+    <div class="ref-credit">${img.credit}</div>
+  `;
+}
+function selectNode(id, el){
+  document.querySelectorAll('.node').forEach(n=>n.classList.remove('selected'));
+  el.classList.add('selected');
+  const sysKey = state.currentSystem;
+  const sys = SYSTEMS[sysKey];
+  const d = sys.diagram.nodeDetails[id];
+  const panel = document.getElementById('detail-panel');
+  if(!d){ panel.innerHTML = `<p class="empty-hint">${id}에 대한 상세 정보가 없습니다.</p>`; return; }
+
+  const linkedTermName = sys.nodeToTerm && sys.nodeToTerm[id];
+  const matchedCases = getCases(sysKey)
+    .map((c,i)=>({c,i}))
+    .filter(({c})=> (c.title+c.vignette+c.answer+c.explain).includes(id));
+
+  let linksHtml = '';
+  if(linkedTermName || matchedCases.length){
+    linksHtml += '<div class="node-links">';
+    if(linkedTermName){
+      linksHtml += `<button class="btn node-link-btn" onclick="jumpToTerm('${sysKey}','${linkedTermName.replace(/'/g,"\\'")}')">📇 "${linkedTermName}" 카드 보기</button>`;
+    }
+    matchedCases.forEach(({i})=>{
+      linksHtml += `<button class="btn node-link-btn" onclick="jumpToCase('${sysKey}', ${i})">🩺 관련 임상 케이스 보기</button>`;
+    });
+    linksHtml += '</div>';
+  }
+
+  panel.innerHTML = `<h3>${id}</h3><div class="detail-sub">${d.sub}</div>` +
+    d.rows.map(([k,v])=>`<div class="detail-row"><span class="k">${k}</span><span class="v">${v}</span></div>`).join('') +
+    linksHtml;
+  drawConnectors(id);
+}
+function jumpToTerm(sysKey, termName){
+  if(state.currentSystem !== sysKey){ state.currentSystem = sysKey; onSystemChange(); }
+  const terms = getTerms(sysKey);
+  const idx = terms.findIndex(t=>t.term === termName);
+  switchView('terms', true);
+  if(idx >= 0){
+    cardQueue = buildQueue();
+    const pos = cardQueue.findIndex(q=>q.term.term === termName);
+    cardPos = pos >= 0 ? pos : 0;
+    renderCard();
+  }
+}
+function jumpToCase(sysKey, caseIndex){
+  if(state.currentSystem !== sysKey){ state.currentSystem = sysKey; onSystemChange(); }
+  switchView('clinical', true);
+  setTimeout(()=>{
+    const cards = document.querySelectorAll('#case-list .case-card');
+    const target = cards[caseIndex];
+    if(target){
+      target.classList.add('open');
+      target.scrollIntoView({behavior:'smooth', block:'center'});
+    }
+  }, 50);
+}
+function drawConnectors(highlightId){
+  const svg = document.getElementById('connector-svg');
+  const wrap = document.querySelector('.diagram-columns');
+  if(!wrap) return;
+  const rect0 = wrap.getBoundingClientRect();
+  svg.setAttribute('width', rect0.width);
+  svg.setAttribute('height', rect0.height);
+  svg.innerHTML = '';
+  const sys = SYSTEMS[state.currentSystem];
+  const allConn = sys.diagram.connections;
+  const nodes = document.querySelectorAll('.node');
+  const posOf = {};
+  nodes.forEach(n=>{
+    const r = n.getBoundingClientRect();
+    posOf[n.dataset.id] = { x: r.right - rect0.left, y: r.top - rect0.top + r.height/2, xLeft: r.left - rect0.left };
+  });
+  Object.keys(allConn).forEach(from=>{
+    allConn[from].forEach(to=>{
+      if(!posOf[from] || !posOf[to]) return;
+      const isHighlighted = highlightId && (from===highlightId || to===highlightId);
+      const path = document.createElementNS('http://www.w3.org/2000/svg','path');
+      const x1 = posOf[from].x, y1 = posOf[from].y;
+      const x2 = posOf[to].xLeft, y2 = posOf[to].y;
+      const mx = (x1+x2)/2;
+      path.setAttribute('d', `M ${x1} ${y1} C ${mx} ${y1}, ${mx} ${y2}, ${x2} ${y2}`);
+      path.setAttribute('fill','none');
+      path.setAttribute('stroke', isHighlighted ? '#E8C547' : '#2B3339');
+      path.setAttribute('stroke-width', isHighlighted ? '2' : '1');
+      svg.appendChild(path);
+    });
+  });
+}
+window.addEventListener('resize', ()=>drawConnectors());
+
+/* ================= EXAM MODE (mixed, separate from SRS) ================= */
+const EXAM_LENGTH = 8;
+let examState = null; // null = not started; otherwise {questions, idx, score, answers}
+
+function renderExamIntro(){
+  const box = document.getElementById('exam-container');
+  const sysLabel = SYSTEMS[state.currentSystem].label;
+  box.innerHTML = `
+    <div class="exam-intro">
+      <p><b>${sysLabel}</b> 계통에서 용어 ${Math.ceil(EXAM_LENGTH*0.6)}문항 + 임상 케이스 ${Math.floor(EXAM_LENGTH*0.4)}문항을 무작위로 섞어 총 ${EXAM_LENGTH}문항을 출제합니다.<br>임상 케이스는 자유 서술이라 스스로 채점합니다.</p>
+      <button class="btn primary" onclick="startExam()">테스트 시작</button>
+    </div>`;
+}
+function startExam(){
+  const sysKey = state.currentSystem;
+  const terms = getTerms(sysKey).slice();
+  const cases = getCases(sysKey).slice();
+  const termCount = Math.min(Math.ceil(EXAM_LENGTH*0.6), terms.length);
+  const caseCount = Math.min(EXAM_LENGTH - termCount, cases.length);
+  const shuffledTerms = terms.sort(()=>Math.random()-0.5).slice(0, termCount).map(t=>({type:'term', data:t}));
+  const shuffledCases = cases.sort(()=>Math.random()-0.5).slice(0, caseCount).map(c=>({type:'case', data:c}));
+  const questions = shuffledTerms.concat(shuffledCases).sort(()=>Math.random()-0.5);
+  examState = { questions, idx:0, score:0, answers:[] };
+  renderExamQuestion();
+}
+function renderExamQuestion(){
+  const box = document.getElementById('exam-container');
+  if(examState.idx >= examState.questions.length){ finishExam(); return; }
+  const q = examState.questions[examState.idx];
+  const progress = `문항 ${examState.idx+1} / ${examState.questions.length}`;
+
+  if(q.type === 'term'){
+    box.innerHTML = `
+      <div class="exam-progress">${progress}</div>
+      <div class="exam-card">
+        <div class="exam-q-type">용어 회상</div>
+        <div class="exam-q-text">이 설명에 맞는 용어는? "${q.data.def}"</div>
+        <input type="text" id="exam-term-input" class="recall-input" placeholder="용어를 입력하세요" autocomplete="off">
+        <button class="btn primary" id="exam-term-submit" style="margin-top:12px;">제출</button>
+        <div class="exam-result" id="exam-result"></div>
+      </div>`;
+    const input = document.getElementById('exam-term-input');
+    const submit = ()=>{
+      const correct = fuzzyMatches(input.value || '', q.data.term);
+      if(correct) examState.score++;
+      examState.answers.push({type:'term', prompt:q.data.def, correctAnswer:q.data.term, correct});
+      document.getElementById('exam-result').innerHTML = correct
+        ? `<span style="color:var(--nerve)">정답! → ${q.data.term}</span>`
+        : `<span style="color:var(--artery)">오답. 정답: ${q.data.term}</span>`;
+      input.disabled = true;
+      document.getElementById('exam-term-submit').disabled = true;
+      setTimeout(()=>{ examState.idx++; renderExamQuestion(); }, 1200);
+    };
+    document.getElementById('exam-term-submit').onclick = submit;
+    input.addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); submit(); } });
+    input.focus();
+  } else {
+    box.innerHTML = `
+      <div class="exam-progress">${progress}</div>
+      <div class="exam-card">
+        <div class="exam-q-type">임상 케이스 (자가 채점)</div>
+        <div class="exam-q-text">${q.data.vignette}</div>
+        <textarea class="self-check-input" id="exam-case-input" placeholder="예상 진단을 적어보세요..."></textarea>
+        <button class="btn primary" id="exam-case-reveal" style="margin-top:12px;">정답 확인</button>
+        <div class="exam-result" id="exam-case-answer" style="display:none;">
+          <span class="a-k" style="color:var(--nerve); font-size:11px; text-transform:uppercase;">정답</span> ${q.data.answer}
+          <br><span class="a-k" style="color:var(--nerve); font-size:11px; text-transform:uppercase;">해설</span> ${q.data.explain}
+        </div>
+        <div class="exam-self-grade" id="exam-self-grade">
+          <button class="btn" style="flex:1;" onclick="gradeExamCase(true)">✓ 맞았어요</button>
+          <button class="btn again" style="flex:1;" onclick="gradeExamCase(false)">✗ 틀렸어요</button>
+        </div>
+      </div>`;
+    document.getElementById('exam-case-reveal').onclick = ()=>{
+      document.getElementById('exam-case-answer').style.display = 'block';
+      document.getElementById('exam-self-grade').classList.add('visible');
+      document.getElementById('exam-case-reveal').disabled = true;
+    };
+  }
+}
+function gradeExamCase(correct){
+  const q = examState.questions[examState.idx];
+  if(correct) examState.score++;
+  examState.answers.push({type:'case', prompt:q.data.title, correctAnswer:q.data.answer, correct});
+  examState.idx++;
+  renderExamQuestion();
+}
+function finishExam(){
+  const box = document.getElementById('exam-container');
+  const total = examState.questions.length;
+  const pct = Math.round((examState.score/total)*100);
+  const breakdown = examState.answers.map(a=>
+    `<div>${a.correct ? '✓' : '✗'} <b>${a.type==='term'?'용어':'케이스'}</b> — ${a.correctAnswer}</div>`
+  ).join('');
+  box.innerHTML = `
+    <div class="exam-card exam-summary">
+      <div class="big-score">${examState.score} / ${total}</div>
+      <div style="color:var(--text-dim); font-size:13px;">정답률 ${pct}%</div>
+      <button class="btn primary" style="margin-top:18px;" onclick="examState=null; startExam();">다시 응시하기</button>
+      <div class="exam-breakdown">${breakdown}</div>
+    </div>`;
+}
+
+/* ================= ROOT BUILDER GAME ================= */
+// gameState = null (not started) or:
+// { combo, best, distractorPool(all frags for this system), current:{term, parts, pool[{frag,used}], build[]} }
+let gameState = null;
+
+function getGameableTerms(sysKey){
+  const sys = SYSTEMS[sysKey];
+  if(!sys.wordParts) return [];
+  // Only built-in terms have curated word-part breakdowns; custom (teacher-added)
+  // terms don't, since there's no way to auto-decompose arbitrary text.
+  return sys.terms.filter(t => sys.wordParts[t.term]);
+}
+function startGame(){
+  const sysKey = state.currentSystem;
+  const gameable = getGameableTerms(sysKey);
+  if(!gameable.length){
+    document.getElementById('game-container').innerHTML =
+      `<p class="empty-hint">이 계통에는 아직 어근 분해 데이터가 없습니다.</p>`;
+    gameState = null;
+    return;
+  }
+  gameState = { combo:0, best: state.gameHighScore[sysKey] || 0 };
+  nextGameRound();
+}
+function nextGameRound(){
+  const sysKey = state.currentSystem;
+  const sys = SYSTEMS[sysKey];
+  const gameable = getGameableTerms(sysKey);
+  const term = gameable[Math.floor(Math.random()*gameable.length)];
+  const correctParts = sys.wordParts[term.term];
+
+  // Difficulty scales with combo: more distractor tiles as the player does better.
+  const numDistractors = Math.min(2 + Math.floor(gameState.combo/3), 5);
+  const allOtherFrags = [];
+  gameable.forEach(t=>{
+    if(t.term === term.term) return;
+    sys.wordParts[t.term].forEach(p=>allOtherFrags.push(p.frag));
+  });
+  const shuffledOthers = allOtherFrags.sort(()=>Math.random()-0.5);
+  const distractors = [...new Set(shuffledOthers)].slice(0, numDistractors);
+
+  const pool = correctParts.map(p=>({frag:p.frag, correct:true, used:false}))
+    .concat(distractors.map(f=>({frag:f, correct:false, used:false})))
+    .sort(()=>Math.random()-0.5);
+
+  gameState.current = { term, correctParts, pool, build:[] };
+  renderGame();
+}
+function renderGame(){
+  const box = document.getElementById('game-container');
+  const g = gameState.current;
+  box.innerHTML = `
+    <div class="game-hud">
+      <div class="game-hud-item"><div class="ghi-num">${gameState.combo}</div><div class="ghi-label">연속 정답</div></div>
+      <div class="game-hud-item"><div class="ghi-num">${gameState.best}</div><div class="ghi-label">최고 기록</div></div>
+    </div>
+    <div class="game-card">
+      <div class="game-clue">이 뜻을 가진 용어를 조립하세요: <b>"${g.term.def}"</b></div>
+      <div class="build-area" id="build-area"></div>
+      <div class="tile-pool" id="tile-pool"></div>
+      <div class="game-controls">
+        <button class="btn" id="game-clear-btn">지우기</button>
+        <button class="btn primary" id="game-check-btn">확인</button>
+      </div>
+      <div class="game-feedback" id="game-feedback"></div>
+    </div>
+  `;
+  document.getElementById('game-clear-btn').onclick = ()=>{
+    g.build = [];
+    g.pool.forEach(p=>p.used=false);
+    renderBuildAndPool();
+  };
+  document.getElementById('game-check-btn').onclick = checkGameAnswer;
+  renderBuildAndPool();
+}
+function renderBuildAndPool(){
+  const g = gameState.current;
+  const buildEl = document.getElementById('build-area');
+  const poolEl = document.getElementById('tile-pool');
+  buildEl.classList.remove('shake','win');
+  buildEl.innerHTML = g.build.length
+    ? g.build.map((frag,i)=>`<span class="build-slot" onclick="removeBuildTile(${i})">${frag}</span>`).join('')
+    : `<span class="build-placeholder">조각을 클릭해서 여기에 순서대로 쌓으세요</span>`;
+  poolEl.innerHTML = g.pool.map((p,i)=>
+    `<span class="tile ${p.used?'used':''}" onclick="pickTile(${i})">${p.frag}</span>`
+  ).join('');
+}
+function pickTile(poolIdx){
+  const g = gameState.current;
+  const p = g.pool[poolIdx];
+  if(p.used) return;
+  p.used = true;
+  g.build.push(p.frag);
+  renderBuildAndPool();
+}
+function removeBuildTile(buildIdx){
+  const g = gameState.current;
+  const removedFrag = g.build[buildIdx];
+  g.build.splice(buildIdx, 1);
+  // free up exactly one matching unused->used tile in the pool for that fragment
+  const p = g.pool.find(p=>p.frag===removedFrag && p.used);
+  if(p) p.used = false;
+  renderBuildAndPool();
+}
+function checkGameAnswer(){
+  const g = gameState.current;
+  const correctSeq = g.correctParts.map(p=>p.frag);
+  const isCorrect = g.build.length === correctSeq.length && g.build.every((f,i)=>f===correctSeq[i]);
+  const buildEl = document.getElementById('build-area');
+  const fb = document.getElementById('game-feedback');
+  const meaningList = g.correctParts.map(p=>`<div>${p.frag} — ${p.meaning}</div>`).join('');
+
+  if(isCorrect){
+    gameState.combo++;
+    if(gameState.combo > gameState.best){
+      gameState.best = gameState.combo;
+      state.gameHighScore[state.currentSystem] = gameState.best;
+      saveState();
+    }
+    buildEl.classList.add('win');
+    fb.className = 'game-feedback correct';
+    fb.innerHTML = `정답! → <b>${correctSeq.join('')}</b><div class="game-meaning-list">${meaningList}</div>`;
+    setTimeout(nextGameRound, 1600);
+  } else {
+    gameState.combo = 0;
+    buildEl.classList.add('shake');
+    fb.className = 'game-feedback wrong';
+    fb.innerHTML = `아쉬워요. 정답: <b>${correctSeq.join('')}</b><div class="game-meaning-list">${meaningList}</div>`;
+    setTimeout(nextGameRound, 2000);
+  }
+}
+
+/* ================= CLINICAL CASES ================= */
+function buildCases(){
+  const sysKey = state.currentSystem;
+  const cases = getCases(sysKey);
+  const list = document.getElementById('case-list');
+  list.innerHTML = '';
+  cases.forEach((c, i)=>{
+    const card = document.createElement('div');
+    card.className = 'case-card';
+    const isCustom = c.custom;
+    const isVerified = !!state.verified[c.id];
+    const badge = isCustom
+      ? `<span class="verify-badge custom">직접 작성</span>`
+      : (isVerified
+          ? `<span class="verify-badge verified">✓ 검수완료</span>`
+          : `<span class="verify-badge unverified">⚠ 검수 전</span>`);
+    card.innerHTML = `
+      <div class="case-head" onclick="this.parentElement.classList.toggle('open')">
+        <div>
+          <div class="case-title">Case ${i+1}. ${c.title}${badge}</div>
+          <div class="case-vignette">${c.vignette}</div>
+        </div>
+        <div class="case-toggle">정답 보기 ▾</div>
+      </div>
+      <div class="case-self-check" onclick="event.stopPropagation()">
+        <label class="self-check-label">정답을 보기 전에 스스로 진단을 먼저 적어보세요 (채점되지 않아요)</label>
+        <textarea class="self-check-input" placeholder="예상 진단과 근거를 적어보세요..."></textarea>
+      </div>
+      <div class="case-answer"><span class="a-k">진단</span>${c.answer}<span class="a-k">해설</span>${c.explain}</div>
+      ${!isCustom ? `<div class="verify-checkbox-row"><label><input type="checkbox" ${isVerified?'checked':''} onchange="toggleVerified('${c.id}', this.checked)"> 이 시나리오를 전문가가 검수했음</label></div>` : ''}
+    `;
+    list.appendChild(card);
+  });
+
+  const addWrap = document.createElement('div');
+  addWrap.className = 'add-content-card';
+  addWrap.innerHTML = `<button class="btn add-toggle-btn" onclick="toggleCaseForm()">+ 시나리오 직접 추가하기</button>
+    <div class="add-form" id="case-add-form">
+      <input type="text" id="case-title-input" placeholder="제목 (예: 손목이 처지는 환자)">
+      <textarea id="case-vignette-input" placeholder="증상 설명(vignette)"></textarea>
+      <input type="text" id="case-answer-input" placeholder="진단/정답">
+      <textarea id="case-explain-input" placeholder="해설"></textarea>
+      <button class="btn primary" onclick="addCustomCase()">추가</button>
+    </div>`;
+  list.appendChild(addWrap);
+}
+function toggleVerified(caseId, checked){
+  state.verified[caseId] = checked;
+  saveState();
+  buildCases();
+}
+function toggleCaseForm(){
+  document.getElementById('case-add-form').classList.toggle('open');
+}
+function addCustomCase(){
+  const title = document.getElementById('case-title-input').value.trim();
+  const vignette = document.getElementById('case-vignette-input').value.trim();
+  const answer = document.getElementById('case-answer-input').value.trim();
+  const explain = document.getElementById('case-explain-input').value.trim();
+  if(!title || !vignette || !answer){ alert('제목, 증상 설명, 진단은 꼭 입력해주세요.'); return; }
+  const bucket = ensureCustomBucket(state.currentSystem);
+  const id = state.currentSystem+'::customcase::'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+  bucket.cases.push({ id, title, vignette, answer, explain: explain || '(해설 없음)', custom:true });
+  saveState();
+  buildCases();
+  renderOverview();
+}
+
+/* ================= DISCLAIMER / ADMIN MODE ================= */
+function initDisclaimer(){
+  const bar = document.getElementById('disclaimer-bar');
+  const closeBtn = document.getElementById('disclaimer-close');
+  const adminCheckbox = document.getElementById('admin-mode-toggle');
+
+  if(sessionStorage.getItem('anatomy_disclaimer_dismissed') === '1'){
+    bar.classList.add('hidden');
+  }
+  closeBtn.addEventListener('click', ()=>{
+    bar.classList.add('hidden');
+    try{ sessionStorage.setItem('anatomy_disclaimer_dismissed','1'); }catch(e){}
+  });
+
+  adminCheckbox.checked = !!state.adminMode;
+  document.body.classList.toggle('admin-mode', !!state.adminMode);
+  adminCheckbox.addEventListener('change', ()=>{
+    if(adminCheckbox.checked){
+      if(!state.adminPin){
+        const pin = prompt('검수 모드 PIN을 새로 만드세요 (교수/조교와 공유할 숫자, 4자리 이상).\n※ 브라우저 안에서만 작동하는 간단한 잠금이며, 강력한 보안은 아닙니다.');
+        if(!pin || pin.trim().length < 4){
+          alert('4자리 이상 PIN이 필요합니다. 검수 모드를 켜지 않았습니다.');
+          adminCheckbox.checked = false;
+          return;
+        }
+        state.adminPin = pin.trim();
+        saveState();
+      } else {
+        const entered = prompt('검수 모드 PIN을 입력하세요.');
+        if(entered !== state.adminPin){
+          alert('PIN이 일치하지 않습니다.');
+          adminCheckbox.checked = false;
+          return;
+        }
+      }
+    }
+    state.adminMode = adminCheckbox.checked;
+    saveState();
+    document.body.classList.toggle('admin-mode', state.adminMode);
+  });
+}
+
+/* ================= INIT ================= */
+function init(){
+  renderSystemSelect();
+  document.getElementById('header-sub').textContent = SYSTEMS[state.currentSystem].sub;
+  document.getElementById('structure-title').textContent = '구조 시각화 — ' + SYSTEMS[state.currentSystem].label;
+  initDisclaimer();
+
+  const hashView = location.hash ? location.hash.slice(1) : null;
+  const startView = VALID_VIEWS.includes(hashView) ? hashView : (VALID_VIEWS.includes(state.currentView) ? state.currentView : 'overview');
+  applyView(startView);
+
+  // Seed browser history so the very first back-button press stays inside
+  // the app (moves to the previous tab) instead of leaving the page.
+  history.replaceState({view: startView}, '', '#'+startView);
+  history.pushState({view: startView}, '', '#'+startView);
+
+  renderOverview();
+  refreshFlashcard();
+  newQuiz();
+  buildColumns();
+  buildCases();
+}
+init();
+</script>
+</body>
+</html>
